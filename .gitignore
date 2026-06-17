@@ -1,0 +1,13 @@
+.DS_Store
+.idea/
+*.log
+
+# Playwright recordings/screenshots (non-essential)
+.playwright-mcp/
+screenshot-*.png
+
+# Vite/Node
+vamos-p2-app/node_modules/
+
+# Keep dist/ committed — needed for jsDelivr CDN delivery
+# vamos-p2-app/dist/

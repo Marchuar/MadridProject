@@ -1,0 +1,27 @@
+.shell {
+  display: flex;
+  min-height: 100dvh;
+  background: var(--color-bg);
+}
+
+/* Sidebar visible on desktop, push main content */
+.main {
+  flex: 1;
+  min-width: 0;
+  overflow-y: auto;
+}
+
+@media (min-width: 768px) {
+  .shell > nav:last-child {
+    display: none; /* hide bottom nav on desktop */
+  }
+  .main {
+    margin-left: var(--sidebar-width);
+  }
+}
+
+@media (max-width: 767px) {
+  .shell > aside:first-child {
+    display: none; /* hide sidebar on mobile */
+  }
+}

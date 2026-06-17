@@ -1,0 +1,33 @@
+.page {
+  padding: var(--space-8) var(--space-6) var(--space-20);
+}
+
+@media (max-width: 767px) {
+  .page { padding: var(--space-6) var(--space-4) calc(var(--nav-height-mobile) + var(--space-8)); }
+}
+
+.pageHeader { margin-bottom: var(--space-8); }
+
+.pageTitle {
+  font-family: var(--font-heading);
+  font-size: var(--text-3xl);
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+.pageSubtitle {
+  font-size: var(--text-base);
+  color: var(--color-text-secondary);
+  margin-top: var(--space-1);
+}
+
+.placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-20) var(--space-4);
+  color: var(--color-text-muted);
+  font-size: var(--text-base);
+  text-align: center;
+}
