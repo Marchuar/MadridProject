@@ -33,6 +33,14 @@ add_action( 'wp_enqueue_scripts', function () {
     ] );
 } );
 
+// Required: Vite output uses ES module syntax (import.meta), so script must be type="module"
+add_filter( 'script_loader_tag', function ( $tag, $handle ) {
+    if ( 'vamos-p2-app' === $handle ) {
+        return str_replace( ' src=', ' type="module" src=', $tag );
+    }
+    return $tag;
+}, 10, 2 );
+
 // Inject the React root div into the page content (before existing content)
 add_filter( 'the_content', function ( $content ) {
     if ( ! is_page( 'projecto-2' ) ) {
