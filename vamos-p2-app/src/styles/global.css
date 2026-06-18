@@ -1,7 +1,4 @@
 @import './tokens.css';
-@import '@fontsource/plus-jakarta-sans/400.css';
-@import '@fontsource/plus-jakarta-sans/600.css';
-@import '@fontsource/plus-jakarta-sans/700.css';
 @import '@fontsource/inter/400.css';
 @import '@fontsource/inter/500.css';
 
@@ -22,7 +19,10 @@ body {
   font-size: var(--text-base);
   line-height: var(--leading-normal);
   color: var(--color-text-primary);
-  background: var(--color-bg);
+  background: #07294D;
+  background: linear-gradient(180deg, #07294D 0%, #040f1c 100%);
+  background-attachment: fixed;
+  min-height: 100dvh;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -33,7 +33,9 @@ body {
   min-height: 100dvh;
   font-family: var(--font-body);
   color: var(--color-text-primary);
-  background: var(--color-bg);
+  background: linear-gradient(180deg, #07294D 0%, #040f1c 100%);
+  background-attachment: fixed;
+  transform: translateZ(0); /* creates stacking context for backdrop-filter */
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -72,7 +74,8 @@ img {
 /* Scrollbar */
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: var(--radius-full); }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: var(--radius-full); }
+::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.25); }
 
 /* Focus visible */
 :focus-visible {
@@ -80,6 +83,30 @@ img {
   outline-offset: 2px;
 }
 
+/* ── Keyframe animations ── */
+
+/* City pulse — breathing red radial glow (hero signature) */
+@keyframes cityPulse {
+  0%, 100% { opacity: 0.25; transform: scale(1); }
+  50%       { opacity: 0.55; transform: scale(1.08); }
+}
+
+/* Shimmer — moving highlight (Magic UI style) */
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position:  200% center; }
+}
+
+/* Spin — loading spinner */
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Skeleton shimmer */
+@keyframes skeletonShimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
+}
+
+/* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;

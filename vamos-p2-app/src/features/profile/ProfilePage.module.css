@@ -19,17 +19,13 @@
 .loadingSpinner {
   width: 36px;
   height: 36px;
-  border: 3px solid var(--color-border);
+  border: 3px solid var(--glass-border);
   border-top-color: var(--color-primary);
   border-radius: 50%;
   animation: spin 0.65s linear infinite;
 }
 
-@keyframes spin { to { transform: rotate(360deg); } }
-
-.pageHeader {
-  margin-bottom: var(--space-6);
-}
+.pageHeader { margin-bottom: var(--space-6); }
 
 .pageTitle {
   font-family: var(--font-heading);
@@ -44,13 +40,16 @@
   margin-top: var(--space-1);
 }
 
+/* ── Profile banner ── */
 .profileBanner {
   display: flex;
   align-items: center;
   gap: var(--space-4);
   padding: var(--space-5);
-  background: linear-gradient(135deg, var(--color-primary-light) 0%, #fff8f0 100%);
-  border: 1px solid #fecaca;
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
   border-radius: var(--radius-lg);
   margin-bottom: var(--space-8);
 }
@@ -59,7 +58,7 @@
   width: 64px;
   height: 64px;
   border-radius: var(--radius-full);
-  background: var(--color-primary);
+  background: linear-gradient(135deg, var(--color-primary), var(--color-navy));
   color: white;
   font-family: var(--font-heading);
   font-weight: 700;
@@ -68,7 +67,7 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.25);
+  box-shadow: 0 4px 12px rgba(227,30,36,0.35);
 }
 
 .displayName {
@@ -84,6 +83,7 @@
   margin-top: 2px;
 }
 
+/* ── Sections ── */
 .sections {
   display: flex;
   flex-direction: column;
@@ -91,8 +91,10 @@
 }
 
 .section {
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
   border-radius: var(--radius-lg);
   padding: var(--space-6);
   display: flex;
@@ -106,7 +108,7 @@
   gap: var(--space-2);
   color: var(--color-primary);
   padding-bottom: var(--space-4);
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--glass-border);
 }
 
 .sectionTitle {
@@ -132,6 +134,7 @@
   .grid2 { grid-template-columns: 1fr; }
 }
 
+/* ── Select fields ── */
 .selectField {
   display: flex;
   flex-direction: column;
@@ -147,16 +150,16 @@
 .select {
   height: 48px;
   padding: 0 var(--space-4);
-  border: 1.5px solid var(--color-border);
+  border: 1.5px solid var(--glass-border);
   border-radius: var(--radius-md);
-  background: var(--color-surface);
+  background: rgba(255,255,255,0.07);
   font-size: var(--text-base);
   color: var(--color-text-primary);
   cursor: pointer;
   transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
   outline: none;
   appearance: none;
-  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23a8a29e' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23rgba(245,240,232,0.45)' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
   background-repeat: no-repeat;
   background-position: right var(--space-3) center;
   background-size: 20px;
@@ -168,7 +171,12 @@
   box-shadow: var(--shadow-focus);
 }
 
-/* Fieldsets */
+.select option {
+  background: #07294D;
+  color: var(--color-text-primary);
+}
+
+/* ── Fieldsets ── */
 .fieldset {
   border: none;
   padding: 0;
@@ -184,7 +192,7 @@
   margin-bottom: var(--space-1);
 }
 
-/* Budget cards */
+/* ── Budget cards ── */
 .budgetGrid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -202,9 +210,9 @@
   justify-content: center;
   gap: var(--space-1);
   padding: var(--space-4) var(--space-3);
-  border: 2px solid var(--color-border);
+  border: 2px solid var(--glass-border);
   border-radius: var(--radius-md);
-  background: var(--color-surface-2);
+  background: var(--color-surface-hover);
   cursor: pointer;
   transition: border-color var(--transition-fast), background var(--transition-fast),
               color var(--transition-fast), transform var(--transition-fast);
@@ -214,14 +222,14 @@
 
 .budgetCard:hover {
   border-color: var(--color-primary);
-  background: var(--color-primary-light);
+  background: rgba(227,30,36,0.10);
 }
 
 .budgetCard:active { transform: scale(0.97); }
 
 .budgetCardActive {
   border-color: var(--color-primary);
-  background: var(--color-primary-light);
+  background: rgba(227,30,36,0.15);
 }
 
 .budgetLabel {
@@ -237,7 +245,7 @@
   color: var(--color-text-muted);
 }
 
-/* Interest tags */
+/* ── Interest tags ── */
 .tagGrid {
   display: flex;
   flex-wrap: wrap;
@@ -248,8 +256,8 @@
   height: 44px;
   padding: 0 var(--space-4);
   border-radius: var(--radius-full);
-  border: 1.5px solid var(--color-border);
-  background: var(--color-surface-2);
+  border: 1.5px solid var(--glass-border);
+  background: var(--glass-bg);
   font-size: var(--text-sm);
   font-weight: 500;
   color: var(--color-text-secondary);
@@ -262,7 +270,7 @@
 .tag:hover {
   border-color: var(--color-primary);
   color: var(--color-primary);
-  background: var(--color-primary-light);
+  background: rgba(227,30,36,0.10);
 }
 
 .tag:active { transform: scale(0.96); }
@@ -278,13 +286,13 @@
   color: white;
 }
 
-/* Read-only fields */
+/* ── Read-only fields ── */
 .readOnlyField {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: var(--space-3) 0;
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--glass-border);
 }
 
 .readOnlyField:last-child { border-bottom: none; }
@@ -300,7 +308,7 @@
   color: var(--color-text-muted);
 }
 
-/* Sticky save bar */
+/* ── Sticky save bar ── */
 .saveBar {
   position: sticky;
   bottom: calc(var(--nav-height-mobile) + var(--space-4));
@@ -312,7 +320,5 @@
 }
 
 @media (min-width: 768px) {
-  .saveBar {
-    bottom: var(--space-6);
-  }
+  .saveBar { bottom: var(--space-6); }
 }

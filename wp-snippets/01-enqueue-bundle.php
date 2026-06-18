@@ -16,13 +16,21 @@ add_action( 'wp_enqueue_scripts', function () {
         return;
     }
 
+    // Sansation font (brand typeface — not available via @fontsource npm)
+    wp_enqueue_style(
+        'vamos-p2-sansation',
+        'https://fonts.googleapis.com/css2?family=Sansation:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap',
+        [],
+        null
+    );
+
     // Update the commit SHA below after each push to GitHub
     $commit  = 'main'; // replace with actual SHA for cache-busting
     $base    = 'https://cdn.jsdelivr.net/gh/Marchuar/MadridProject@' . $commit . '/vamos-p2-app/dist/assets/';
     $js_url  = $base . 'index.js';
     $css_url = $base . 'index.css';
 
-    wp_enqueue_style( 'vamos-p2-app', $css_url, [], null );
+    wp_enqueue_style( 'vamos-p2-app', $css_url, [ 'vamos-p2-sansation' ], null );
     wp_enqueue_script( 'vamos-p2-app', $js_url, [], null, [ 'in_footer' => true ] );
 
     wp_localize_script( 'vamos-p2-app', 'vamosp2Config', [

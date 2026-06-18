@@ -1,5 +1,6 @@
 import { HashRouter } from 'react-router-dom';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { ConfigProvider, theme as antTheme } from 'antd';
 import { AuthContext, type AuthContextValue } from '../features/auth/useAuth';
 import { ToastProvider } from '../shared/components/Toast/Toast';
 import { apiLogin, apiRegister, apiLogout, apiGetCurrentUser } from '../features/auth/authApi';
@@ -68,11 +69,24 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
 export function App() {
   return (
     <HashRouter>
-      <AuthProvider>
-        <ToastProvider>
-          <AppRouter />
-        </ToastProvider>
-      </AuthProvider>
+      <ConfigProvider
+        theme={{
+          algorithm: antTheme.darkAlgorithm,
+          token: {
+            colorPrimary: '#E31E24',
+            fontFamily: "'Sansation', Arial, sans-serif",
+            borderRadius: 10,
+            colorBgContainer: 'rgba(255,255,255,0.07)',
+            colorBorder: 'rgba(255,255,255,0.15)',
+          },
+        }}
+      >
+        <AuthProvider>
+          <ToastProvider>
+            <AppRouter />
+          </ToastProvider>
+        </AuthProvider>
+      </ConfigProvider>
     </HashRouter>
   );
 }

@@ -1,46 +1,44 @@
 .page {
   min-height: 100dvh;
-  background: var(--color-bg);
+  background: linear-gradient(180deg, #07294D 0%, #040f1c 100%);
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: var(--space-8) var(--space-4) var(--space-16);
+  justify-content: center;
+  padding: var(--space-8) var(--space-4);
   position: relative;
+  overflow: hidden;
 }
 
-/* Red gradient strip at the top */
-.heroBar {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 220px;
-  background: linear-gradient(135deg, #991B1B 0%, var(--color-primary) 50%, #E85D5D 100%);
-  pointer-events: none;
-}
-
-/* Decorative dot pattern */
-.heroBar::after {
+/* City pulse ambient glow */
+.page::before {
   content: '';
   position: absolute;
-  inset: 0;
-  background-image: radial-gradient(circle, rgba(255,255,255,0.15) 1px, transparent 1px);
-  background-size: 24px 24px;
+  top: 20%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(227,30,36,0.12) 0%, transparent 70%);
+  animation: cityPulse 6s ease-in-out infinite;
+  pointer-events: none;
 }
 
 .card {
   position: relative;
   z-index: 1;
-  background: var(--color-surface);
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
   border-radius: var(--radius-xl);
-  box-shadow: var(--shadow-xl);
+  box-shadow: var(--glass-shadow);
   padding: var(--space-8);
   width: 100%;
   max-width: 460px;
   display: flex;
   flex-direction: column;
   gap: var(--space-6);
-  margin-top: var(--space-12);
 }
 
 .brandHeader {
@@ -58,7 +56,7 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+  box-shadow: 0 4px 12px rgba(227,30,36,0.40);
 }
 
 .brandName {
@@ -120,7 +118,7 @@
   font-size: var(--text-sm);
   color: var(--color-text-secondary);
   padding-top: var(--space-2);
-  border-top: 1px solid var(--color-border);
+  border-top: 1px solid var(--glass-border);
 }
 
 .switchLink a {
@@ -130,4 +128,5 @@
 
 .switchLink a:hover {
   color: var(--color-primary-dark);
+  text-decoration: none;
 }

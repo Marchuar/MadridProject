@@ -1,5 +1,6 @@
 import { useState, type FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { Eye, EyeOff, MapPin } from 'lucide-react';
 import { useAuth } from './useAuth';
 import { useToast } from '../../shared/components/Toast/Toast';
@@ -50,9 +51,12 @@ export function RegisterPage() {
 
   return (
     <div className={styles.page}>
-      <div className={styles.heroBar} aria-hidden="true" />
-
-      <main className={styles.card}>
+      <motion.main
+        className={styles.card}
+        initial={{ opacity: 0, y: 24, filter: 'blur(8px)' }}
+        animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+        transition={{ duration: 0.5, ease: 'easeOut' }}
+      >
         <div className={styles.brandHeader}>
           <div className={styles.brandIcon}>
             <MapPin size={22} color="white" />
@@ -129,7 +133,7 @@ export function RegisterPage() {
           Already have an account?{' '}
           <Link to="/login">Sign in</Link>
         </p>
-      </main>
+      </motion.main>
     </div>
   );
 }

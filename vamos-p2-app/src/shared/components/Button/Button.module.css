@@ -4,11 +4,11 @@
   justify-content: center;
   gap: var(--space-2);
   font-family: var(--font-body);
-  font-weight: 500;
-  border-radius: var(--radius-md);
+  font-weight: 600;
+  border-radius: var(--radius-pill);
   transition: background var(--transition-fast), color var(--transition-fast),
               box-shadow var(--transition-fast), transform var(--transition-fast),
-              opacity var(--transition-fast);
+              opacity var(--transition-fast), border-color var(--transition-fast);
   touch-action: manipulation;
   white-space: nowrap;
   cursor: pointer;
@@ -28,37 +28,38 @@
 /* Variants */
 .primary {
   background: var(--color-primary);
-  color: var(--color-text-inverse);
+  color: white;
 }
 .primary:hover:not(:disabled) {
   background: var(--color-primary-dark);
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--shadow-red);
 }
 
 .secondary {
-  background: var(--color-surface);
-  color: var(--color-text-primary);
-  border: 1.5px solid var(--color-border);
+  background: rgba(24,99,220,0.20);
+  color: #7EB3FF;
+  border: 1px solid rgba(24,99,220,0.50);
 }
 .secondary:hover:not(:disabled) {
-  background: var(--color-surface-2);
-  border-color: var(--color-text-muted);
+  background: rgba(24,99,220,0.30);
+  border-color: rgba(24,99,220,0.70);
 }
 
 .ghost {
   background: transparent;
   color: var(--color-primary);
+  border: 1.5px solid var(--color-primary);
 }
 .ghost:hover:not(:disabled) {
-  background: var(--color-primary-light);
+  background: rgba(227,30,36,0.12);
 }
 
 .danger {
-  background: var(--color-error);
-  color: var(--color-text-inverse);
+  background: #c0152a;
+  color: white;
 }
 .danger:hover:not(:disabled) {
-  background: #dc2626;
+  background: #a01020;
 }
 
 /* States */
@@ -87,11 +88,10 @@
   position: absolute;
 }
 
-.primary .spinner,
-.danger .spinner { border-top-color: white; }
 .secondary .spinner,
-.ghost .spinner { border-color: rgba(0,0,0,0.15); border-top-color: var(--color-primary); }
+.ghost .spinner {
+  border-color: rgba(255,255,255,0.20);
+  border-top-color: var(--color-primary);
+}
 
 .hidden { opacity: 0; }
-
-@keyframes spin { to { transform: rotate(360deg); } }
