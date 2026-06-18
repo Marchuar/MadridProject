@@ -71,13 +71,13 @@ export function App() {
     <HashRouter>
       <ConfigProvider
         theme={{
-          algorithm: antTheme.darkAlgorithm,
+          algorithm: antTheme.defaultAlgorithm,
           token: {
             colorPrimary: '#E31E24',
             fontFamily: "'Sansation', Arial, sans-serif",
             borderRadius: 10,
-            colorBgContainer: 'rgba(255,255,255,0.07)',
-            colorBorder: 'rgba(255,255,255,0.15)',
+            colorBgBase: '#FFFFFF',
+            colorTextBase: '#111827',
           },
         }}
       >

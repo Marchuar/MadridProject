@@ -10,7 +10,10 @@ interface GlassCardProps {
 
 export function GlassCard({ children, className = '', onClick, as: Tag = 'div' }: GlassCardProps) {
   return (
-    <Tag className={[styles.card, className].filter(Boolean).join(' ')} onClick={onClick}>
+    <Tag
+      className={[styles.card, onClick ? styles.interactive : '', className].filter(Boolean).join(' ')}
+      onClick={onClick}
+    >
       {children}
     </Tag>
   );

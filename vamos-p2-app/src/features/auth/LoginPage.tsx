@@ -45,9 +45,9 @@ export function LoginPage() {
     <div className={styles.page}>
       <motion.main
         className={styles.card}
-        initial={{ opacity: 0, y: 24, filter: 'blur(8px)' }}
-        animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-        transition={{ duration: 0.5, ease: 'easeOut' }}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, ease: 'easeOut' }}
       >
         <div className={styles.brandHeader}>
           <div className={styles.brandIcon}>

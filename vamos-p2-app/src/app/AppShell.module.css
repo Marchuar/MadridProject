@@ -1,27 +1,22 @@
 .shell {
   display: flex;
   min-height: 100dvh;
-  background: transparent;
+  background: var(--color-bg);
 }
-
 .main {
   flex: 1;
   min-width: 0;
-  overflow-y: auto;
   overflow-x: hidden;
 }
 
 @media (min-width: 768px) {
-  .shell > nav:last-child {
-    display: none;
-  }
   .main {
-    margin-left: var(--sidebar-width);
+    margin-left: var(--nav-width);
   }
 }
 
 @media (max-width: 767px) {
-  .shell > aside:first-child {
-    display: none;
+  .main {
+    padding-bottom: var(--nav-height-mobile);
   }
 }
