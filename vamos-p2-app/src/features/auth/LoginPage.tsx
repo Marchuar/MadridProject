@@ -8,13 +8,15 @@ import { Button } from '../../shared/components/Button/Button';
 import { FormField } from '../../shared/components/FormField/FormField';
 import styles from './AuthPages.module.css';
 
+const IS_DEV = import.meta.env.DEV;
+
 export function LoginPage() {
   const { login } = useAuth();
   const { showToast } = useToast();
   const navigate = useNavigate();
 
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [username, setUsername] = useState(IS_DEV ? 'testuser' : '');
+  const [password, setPassword] = useState(IS_DEV ? 'test123' : '');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<{ username?: string; password?: string }>({});
@@ -63,6 +65,13 @@ export function LoginPage() {
           <h2 className={styles.formTitle}>Welcome back</h2>
           <p className={styles.formSubtitle}>Sign in to your account to continue</p>
         </div>
+
+        {IS_DEV && (
+          <div className={styles.devBanner}>
+            <span>🛠 Dev mode</span>
+            <strong>testuser / test123</strong>
+          </div>
+        )}
 
         <form onSubmit={handleSubmit} className={styles.form} noValidate>
           <FormField

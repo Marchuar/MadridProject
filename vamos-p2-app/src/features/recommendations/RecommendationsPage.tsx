@@ -2,10 +2,12 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Sparkles, Star, MapPin, Clock } from 'lucide-react';
 import { useAuth } from '../auth/useAuth';
-import { fetchActivities } from '../activities/activitiesApi';
+import { fetchActivities, type Activity } from '../activities/activitiesApi';
 import { apiGetProfile } from '../profile/profileApi';
 import { scoreActivities, type ScoredActivity } from './recommendationsLogic';
 import { GlassCard } from '../../shared/components/GlassCard/GlassCard';
+import { ActivityDetailModal } from '../activities/ActivityDetailModal';
+import { BookingFlow } from '../booking/BookingFlow';
 import styles from './RecommendationsPage.module.css';
 
 export function RecommendationsPage() {
@@ -13,6 +15,10 @@ export function RecommendationsPage() {
   const [picks, setPicks] = useState<ScoredActivity[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [selectedActivity, setSelectedActivity] = useState<Activity | null>(null);
+  const [bookingActivity, setBookingActivity] = useState<Activity | null>(null);
+  const [detailOpen, setDetailOpen] = useState(false);
+  const [bookingOpen, setBookingOpen] = useState(false);
 
   useEffect(() => {
     if (!user) return;
@@ -114,7 +120,7 @@ export function RecommendationsPage() {
                   </div>
                   <div className={styles.pickFooter}>
                     <span className={styles.pickPrice}>€{activity.price}</span>
-                    <button className={styles.bookBtn}>Book Now</button>
+                    <button className={styles.bookBtn} onClick={() => { setSelectedActivity(activity); setDetailOpen(true); }}>Book Now</button>
                   </div>
                 </GlassCard>
               </motion.div>
@@ -122,6 +128,19 @@ export function RecommendationsPage() {
           })}
         </div>
       )}
+
+      <ActivityDetailModal
+        activity={selectedActivity}
+        open={detailOpen}
+        onClose={() => setDetailOpen(false)}
+        onBook={a => { setBookingActivity(a); setDetailOpen(false); setBookingOpen(true); }}
+      />
+      <BookingFlow
+        activity={bookingActivity}
+        open={bookingOpen}
+        onClose={() => setBookingOpen(false)}
+        onBack={() => { setBookingOpen(false); if (bookingActivity) { setSelectedActivity(bookingActivity); setDetailOpen(true); } }}
+      />
     </div>
   );
 }

@@ -1,13 +1,16 @@
 import { NavLink, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, CalendarDays, Sparkles, UserCircle, LogOut } from 'lucide-react';
+import { LayoutDashboard, Compass, Sparkles, UserCircle, LogOut, MapPin, CalendarDays, Heart } from 'lucide-react';
 import { useAuth } from '../../../features/auth/useAuth';
 import styles from './Navigation.module.css';
 
 const NAV_ITEMS = [
   { to: '/',               icon: LayoutDashboard, label: 'Home' },
-  { to: '/activities',     icon: CalendarDays,     label: 'Activities' },
-  { to: '/recommendations', icon: Sparkles,        label: 'For You' },
-  { to: '/profile',        icon: UserCircle,       label: 'Profile' },
+  { to: '/activities',     icon: Compass,          label: 'Activities' },
+  { to: '/map',            icon: MapPin,            label: 'Map' },
+  { to: '/calendar',       icon: CalendarDays,      label: 'Calendar' },
+  { to: '/recommendations', icon: Sparkles,          label: 'For You' },
+  { to: '/my-madrid',      icon: Heart,             label: 'My Madrid' },
+  { to: '/profile',        icon: UserCircle,        label: 'Profile' },
 ];
 
 export function Sidebar() {
@@ -36,7 +39,7 @@ export function Sidebar() {
               [styles.navItem, isActive ? styles.navItemActive : ''].join(' ')
             }
           >
-            <Icon size={20} aria-hidden="true" />
+            <Icon size={18} aria-hidden="true" />
             <span>{label}</span>
           </NavLink>
         ))}
@@ -50,7 +53,7 @@ export function Sidebar() {
           </div>
         )}
         <button className={styles.logoutBtn} onClick={handleLogout} aria-label="Sign out">
-          <LogOut size={18} aria-hidden="true" />
+          <LogOut size={16} aria-hidden="true" />
           <span>Sign out</span>
         </button>
       </div>

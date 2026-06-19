@@ -1,8 +1,11 @@
 import { useState, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Map, Search, X } from 'lucide-react';
 import { fetchActivities, type Activity } from './activitiesApi';
 import { ActivityCard } from './ActivityCard';
+import { ActivityDetailModal } from './ActivityDetailModal';
+import { BookingFlow } from '../booking/BookingFlow';
 import styles from './ActivitiesPage.module.css';
 
 const FILTERS = [
@@ -19,10 +22,16 @@ const FILTERS = [
 
 export function ActivitiesPage() {
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   const [activities, setActivities] = useState<Activity[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [activeFilter, setActiveFilter] = useState(searchParams.get('category') ?? '');
+  const [search, setSearch] = useState('');
+  const [selectedActivity, setSelectedActivity] = useState<Activity | null>(null);
+  const [bookingActivity, setBookingActivity] = useState<Activity | null>(null);
+  const [detailOpen, setDetailOpen] = useState(false);
+  const [bookingOpen, setBookingOpen] = useState(false);
 
   useEffect(() => {
     setIsLoading(true);
@@ -33,79 +42,148 @@ export function ActivitiesPage() {
       .finally(() => setIsLoading(false));
   }, [activeFilter]);
 
+  const filtered = search.trim()
+    ? activities.filter(a =>
+        a.title.toLowerCase().includes(search.toLowerCase()) ||
+        a.location?.toLowerCase().includes(search.toLowerCase())
+      )
+    : activities;
+
+  const openDetail = (activity: Activity) => {
+    setSelectedActivity(activity);
+    setDetailOpen(true);
+  };
+
+  const openBooking = (activity: Activity) => {
+    setBookingActivity(activity);
+    setDetailOpen(false);
+    setBookingOpen(true);
+  };
+
   return (
     <div className={styles.page}>
       <header className={styles.pageHeader}>
-        <h1 className={styles.pageTitle}>Activities in Madrid</h1>
-        <p className={styles.pageSubtitle}>Explore things to do</p>
-      </header>
-
-      {/* Filter pills */}
-      <div className={styles.filters} role="group" aria-label="Category filters">
-        {FILTERS.map(f => (
-          <button
-            key={f.value}
-            className={[styles.filterPill, activeFilter === f.value ? styles.filterPillActive : ''].join(' ')}
-            onClick={() => setActiveFilter(f.value)}
-            aria-pressed={activeFilter === f.value}
-          >
-            {f.label}
+        <div className={styles.headerTop}>
+          <div>
+            <h1 className={styles.pageTitle}>Activities</h1>
+            <p className={styles.pageSubtitle}>
+              {isLoading ? 'Loading...' : `${filtered.length} experience${filtered.length !== 1 ? 's' : ''} in Madrid`}
+            </p>
+          </div>
+          <button className={styles.mapBtn} onClick={() => navigate('/map')} aria-label="View on map">
+            <Map size={18} />
+            <span>Map</span>
           </button>
-        ))}
-      </div>
+        </div>
+
+        {/* Search */}
+        <div className={styles.searchWrap}>
+          <Search size={16} className={styles.searchIcon} />
+          <input
+            type="search"
+            className={styles.searchInput}
+            placeholder="Search activities or places..."
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            aria-label="Search activities"
+          />
+          {search && (
+            <button className={styles.searchClear} onClick={() => setSearch('')} aria-label="Clear search">
+              <X size={14} />
+            </button>
+          )}
+        </div>
+
+        {/* Filter pills */}
+        <div className={styles.filters} role="group" aria-label="Category filters">
+          {FILTERS.map(f => (
+            <button
+              key={f.value}
+              className={[styles.filterPill, activeFilter === f.value ? styles.filterPillActive : ''].join(' ')}
+              onClick={() => setActiveFilter(f.value)}
+              aria-pressed={activeFilter === f.value}
+            >
+              {f.label}
+            </button>
+          ))}
+        </div>
+      </header>
 
       {/* Loading skeletons */}
       {isLoading && (
         <div className={styles.grid}>
-          {Array.from({ length: 6 }).map((_, i) => (
-            <div key={i} className={styles.skeleton} aria-hidden="true" />
+          {Array.from({ length: 8 }).map((_, i) => (
+            <div key={i} className={styles.skeleton} aria-hidden="true">
+              <div className={styles.skeletonPhoto} />
+              <div className={styles.skeletonBody}>
+                <div className={styles.skeletonLine} style={{ width: '70%' }} />
+                <div className={styles.skeletonLine} style={{ width: '90%' }} />
+                <div className={styles.skeletonLine} style={{ width: '50%' }} />
+              </div>
+            </div>
           ))}
         </div>
       )}
 
-      {/* Error state */}
       {!isLoading && error && (
         <div className={styles.empty}>
           <p className={styles.errorMsg}>{error}</p>
-          <button className={styles.retryBtn} onClick={() => setActiveFilter(activeFilter)}>
-            Try again
-          </button>
+          <button className={styles.retryBtn} onClick={() => setActiveFilter(activeFilter)}>Try again</button>
         </div>
       )}
 
-      {/* Empty state */}
-      {!isLoading && !error && activities.length === 0 && (
+      {!isLoading && !error && filtered.length === 0 && (
         <div className={styles.empty}>
-          <p>No activities match this filter.</p>
-          <button className={styles.retryBtn} onClick={() => setActiveFilter('')}>
+          <p className={styles.emptyTitle}>No activities found</p>
+          <p className={styles.emptyHint}>{search ? `No results for "${search}"` : 'Nothing matches this filter.'}</p>
+          <button className={styles.retryBtn} onClick={() => { setActiveFilter(''); setSearch(''); }}>
             View all activities
           </button>
         </div>
       )}
 
-      {/* Cards grid */}
-      {!isLoading && !error && activities.length > 0 && (
+      {!isLoading && !error && filtered.length > 0 && (
         <motion.div
           className={styles.grid}
-          variants={{ show: { transition: { staggerChildren: 0.07 } } }}
+          variants={{ show: { transition: { staggerChildren: 0.06 } } }}
           initial="hidden"
           animate="show"
         >
           <AnimatePresence>
-            {activities.map(a => (
+            {filtered.map(a => (
               <motion.div
                 key={a.id}
                 variants={{
                   hidden: { opacity: 0, y: 24 },
-                  show:   { opacity: 1, y: 0, transition: { duration: 0.35, ease: 'easeOut' } },
+                  show: { opacity: 1, y: 0, transition: { duration: 0.35, ease: 'easeOut' } },
                 }}
               >
-                <ActivityCard activity={a} />
+                <ActivityCard activity={a} onOpen={openDetail} />
               </motion.div>
             ))}
           </AnimatePresence>
         </motion.div>
       )}
+
+      <ActivityDetailModal
+        activity={selectedActivity}
+        open={detailOpen}
+        onClose={() => setDetailOpen(false)}
+        onBook={openBooking}
+      />
+
+      <BookingFlow
+        activity={bookingActivity}
+        open={bookingOpen}
+        onClose={() => setBookingOpen(false)}
+        onBack={() => {
+          setBookingOpen(false);
+          if (bookingActivity) {
+            setSelectedActivity(bookingActivity);
+            setDetailOpen(true);
+          }
+        }}
+      />
     </div>
   );
 }

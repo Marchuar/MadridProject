@@ -1,0 +1,229 @@
+.modal :global(.ant-modal-content) {
+  padding: 0;
+  border-radius: var(--radius-2xl);
+  overflow: hidden;
+}
+
+.inner { display: flex; flex-direction: column; }
+
+/* Header */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-4) var(--space-5);
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-bg);
+}
+.activityMini { display: flex; align-items: center; gap: var(--space-3); }
+.miniThumb {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-md);
+  object-fit: cover;
+  flex-shrink: 0;
+}
+.miniTitle {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: var(--text-sm);
+  color: var(--color-text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 240px;
+}
+.miniPrice { font-size: var(--text-xs); color: var(--color-text-muted); }
+.closeBtn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--color-text-muted);
+  font-size: var(--text-lg);
+  padding: var(--space-1);
+}
+
+/* Steps */
+.stepsWrap {
+  padding: var(--space-5) var(--space-5) var(--space-3);
+}
+.steps :global(.ant-steps-item-finish .ant-steps-item-icon),
+.steps :global(.ant-steps-item-process .ant-steps-item-icon) {
+  background: var(--color-navy);
+  border-color: var(--color-navy);
+}
+
+/* Step content area */
+.stepContent {
+  padding: var(--space-4) var(--space-5);
+  min-height: 280px;
+}
+.stepTitle {
+  font-family: var(--font-serif);
+  font-size: var(--text-xl);
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin-bottom: var(--space-1);
+}
+.stepSub { font-size: var(--text-sm); color: var(--color-text-muted); margin-bottom: var(--space-4); }
+
+/* Date step */
+.dateStep { display: flex; flex-direction: column; }
+.datePicker { width: 100% !important; }
+
+/* People step */
+.peopleStep { display: flex; flex-direction: column; }
+.peopleGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-3);
+}
+.peopleCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: var(--space-3) var(--space-2);
+  border-radius: var(--radius-lg);
+  border: 2px solid var(--color-border);
+  background: var(--color-surface);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+.peopleCard:hover { border-color: var(--color-navy); }
+.peopleCardActive {
+  border-color: var(--color-navy);
+  background: var(--color-navy-light);
+}
+.peopleEmoji { font-size: 1.2rem; line-height: 1; }
+.peopleLabel { font-weight: 700; font-size: var(--text-sm); color: var(--color-text-primary); }
+.peopleSub { font-size: 10px; color: var(--color-text-muted); }
+
+/* Confirm step */
+.confirmStep { display: flex; flex-direction: column; }
+.confirmCard {
+  display: flex;
+  gap: var(--space-4);
+  background: var(--color-bg);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+}
+.confirmImg { width: 120px; height: 120px; object-fit: cover; flex-shrink: 0; }
+.confirmDetails {
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  flex: 1;
+}
+.confirmActivity { font-family: var(--font-serif); font-weight: 600; font-size: var(--text-base); }
+.confirmRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+}
+.confirmTotal {
+  margin-top: auto;
+  font-size: var(--text-base);
+  color: var(--color-text-primary);
+  padding-top: var(--space-2);
+  border-top: 1px solid var(--color-border);
+}
+.confirmTotal strong { font-family: var(--font-heading); font-size: var(--text-lg); }
+
+/* Nav buttons */
+.navBtns {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-4) var(--space-5) var(--space-5);
+  border-top: 1px solid var(--color-border);
+  background: var(--color-bg);
+}
+.backBtn {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--color-text-secondary);
+  font-size: var(--text-sm);
+  padding: var(--space-2);
+  border-radius: var(--radius-md);
+  transition: color var(--transition-fast);
+}
+.backBtn:hover { color: var(--color-text-primary); }
+
+.nextBtn {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  height: 44px;
+  padding: 0 var(--space-6);
+  background: var(--color-navy);
+  color: white;
+  border: none;
+  border-radius: var(--radius-pill);
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: var(--text-sm);
+  cursor: pointer;
+  transition: background var(--transition-fast), opacity var(--transition-fast);
+}
+.nextBtn:disabled { opacity: 0.45; cursor: not-allowed; }
+.nextBtn:hover:not(:disabled) { background: var(--color-navy-mid); }
+
+.confirmBtn {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  height: 44px;
+  padding: 0 var(--space-6);
+  background: var(--color-success);
+  color: white;
+  border: none;
+  border-radius: var(--radius-pill);
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: var(--text-sm);
+  cursor: pointer;
+  transition: opacity var(--transition-fast);
+}
+.confirmBtn:disabled { opacity: 0.7; cursor: wait; }
+
+/* Success */
+.successScreen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: var(--space-10) var(--space-8);
+  gap: var(--space-4);
+}
+.successIcon { margin-bottom: var(--space-2); }
+.successTitle {
+  font-family: var(--font-serif);
+  font-size: var(--text-3xl);
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+.successSub { font-size: var(--text-base); color: var(--color-text-secondary); line-height: 1.6; }
+.successHint { font-size: var(--text-sm); color: var(--color-text-muted); }
+.successClose {
+  margin-top: var(--space-2);
+  height: 44px;
+  padding: 0 var(--space-8);
+  background: var(--color-navy);
+  color: white;
+  border: none;
+  border-radius: var(--radius-pill);
+  font-family: var(--font-heading);
+  font-weight: 700;
+  cursor: pointer;
+  transition: background var(--transition-fast);
+}
+.successClose:hover { background: var(--color-navy-mid); }

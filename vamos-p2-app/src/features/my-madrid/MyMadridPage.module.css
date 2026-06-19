@@ -1,0 +1,182 @@
+.page {
+  padding: var(--space-8);
+  background: var(--color-bg);
+  min-height: 100%;
+}
+@media (max-width: 767px) {
+  .page { padding: var(--space-4) var(--space-4) calc(var(--nav-height-mobile) + var(--space-6)); }
+}
+
+.header { margin-bottom: var(--space-6); }
+.title {
+  font-family: var(--font-serif);
+  font-size: var(--text-4xl);
+  font-weight: 700;
+  color: var(--color-text-primary);
+  letter-spacing: -0.02em;
+  line-height: var(--leading-tight);
+}
+.subtitle { font-size: var(--text-sm); color: var(--color-text-muted); margin-top: var(--space-1); }
+
+/* Tabs */
+.tabs :global(.ant-tabs-nav) { margin-bottom: var(--space-5); }
+
+/* Shared tab content */
+.tabContent { min-height: 300px; }
+
+/* Liked grid */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: var(--space-4);
+}
+
+.card {
+  background: var(--color-surface);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  cursor: pointer;
+  transition: box-shadow var(--transition-base);
+  display: flex;
+  flex-direction: column;
+}
+.card:hover { box-shadow: var(--shadow-md); }
+.cardPhoto { height: 150px; overflow: hidden; }
+.cardPhoto img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s; }
+.card:hover .cardPhoto img { transform: scale(1.05); }
+.cardBody { padding: var(--space-3) var(--space-4) var(--space-2); flex: 1; }
+.cardTitle { font-family: var(--font-serif); font-size: var(--text-sm); font-weight: 600; color: var(--color-text-primary); }
+.cardMeta { font-size: 11px; color: var(--color-text-muted); margin-top: 3px; }
+.cardCta {
+  margin: 0 var(--space-4) var(--space-3);
+  height: 32px;
+  border: none;
+  background: var(--color-navy);
+  color: white;
+  border-radius: var(--radius-full);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  transition: background var(--transition-fast);
+}
+.cardCta:hover:not(:disabled) { background: var(--color-navy-mid); }
+.cardCta:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* Bookings */
+.bookingsList { display: flex; flex-direction: column; gap: var(--space-6); }
+.bookingsGroup { display: flex; flex-direction: column; gap: var(--space-3); }
+.groupLabel {
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.bookingCard {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+  cursor: pointer;
+  transition: box-shadow var(--transition-fast);
+}
+.bookingCard:hover { box-shadow: var(--shadow-sm); }
+.bookingCardPast { opacity: 0.75; }
+.bookingThumb { width: 64px; height: 64px; border-radius: var(--radius-md); object-fit: cover; flex-shrink: 0; }
+.bookingInfo { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+.bookingTitle { font-family: var(--font-serif); font-size: var(--text-sm); font-weight: 600; color: var(--color-text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.bookingMeta { display: flex; gap: var(--space-3); font-size: 11px; color: var(--color-text-muted); }
+.bookingMeta span { display: flex; align-items: center; gap: 3px; }
+.bookingPrice { font-size: 11px; font-weight: 600; color: var(--color-text-primary); }
+
+.upcomingBadge {
+  flex-shrink: 0;
+  padding: 3px 10px;
+  background: var(--color-navy-light);
+  color: var(--color-navy);
+  border-radius: var(--radius-full);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.visitBtn {
+  flex-shrink: 0;
+  height: 32px;
+  padding: 0 var(--space-3);
+  background: var(--color-bg);
+  border: 1.5px solid var(--color-border-strong);
+  border-radius: var(--radius-full);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all var(--transition-fast);
+}
+.visitBtn:hover { border-color: var(--color-success); color: var(--color-success); }
+
+.visitedBadge {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--color-success);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* Memory wall */
+.memoryWall {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: var(--space-4);
+}
+.memoryCard {
+  position: relative;
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  aspect-ratio: 3/4;
+  cursor: pointer;
+}
+.memoryImg { width: 100%; height: 100%; object-fit: cover; }
+.memoryOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 40%, rgba(0,0,0,0.72) 100%);
+}
+.memoryContent {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.memoryCheck { display: flex; align-items: center; gap: 4px; font-size: 11px; color: #86efac; font-weight: 600; }
+.memoryTitle { font-family: var(--font-serif); font-size: var(--text-sm); font-weight: 700; color: white; line-height: var(--leading-snug); }
+.memoryDate { font-size: 11px; color: rgba(255,255,255,0.7); }
+
+/* Empty state */
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-16) var(--space-4);
+  text-align: center;
+}
+.emptyIcon { opacity: 0.5; }
+.emptyTitle { font-family: var(--font-serif); font-size: var(--text-xl); color: var(--color-text-secondary); }
+.emptyHint { font-size: var(--text-sm); color: var(--color-text-muted); max-width: 280px; line-height: var(--leading-relaxed); }

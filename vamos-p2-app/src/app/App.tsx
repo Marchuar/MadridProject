@@ -3,6 +3,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { ConfigProvider, theme as antTheme } from 'antd';
 import { AuthContext, type AuthContextValue } from '../features/auth/useAuth';
 import { ToastProvider } from '../shared/components/Toast/Toast';
+import { UserActivitiesProvider } from '../shared/store/userActivitiesStore';
 import { apiLogin, apiRegister, apiLogout, apiGetCurrentUser } from '../features/auth/authApi';
 import { AppRouter } from './Router';
 import type { User } from '../shared/types/user';
@@ -82,9 +83,11 @@ export function App() {
         }}
       >
         <AuthProvider>
-          <ToastProvider>
-            <AppRouter />
-          </ToastProvider>
+          <UserActivitiesProvider>
+            <ToastProvider>
+              <AppRouter />
+            </ToastProvider>
+          </UserActivitiesProvider>
         </AuthProvider>
       </ConfigProvider>
     </HashRouter>

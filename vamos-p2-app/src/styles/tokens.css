@@ -8,7 +8,7 @@
   --color-blue: #1863DC;
   --color-blue-light: #EFF6FF;
 
-  --color-bg: #F7F6F4;
+  --color-bg: #FAFAF8;
   --color-surface: #FFFFFF;
   --color-border: #EAEAE8;
   --color-border-strong: #D4D4D0;
@@ -32,6 +32,13 @@
   --cat-language_exchange: #0891B2;
   --cat-day_trip: #D97706;
 
+  --color-terracotta: #E8693A;
+  --color-terracotta-hover: #D15728;
+  --color-terracotta-light: #FEF0E8;
+  --color-gold: #F59E0B;
+  --color-gold-light: #FFFBEB;
+
+  --font-serif: 'Playfair Display', Georgia, 'Times New Roman', serif;
   --font-heading: 'Sansation', Arial, sans-serif;
   --font-body: 'Inter', system-ui, -apple-system, sans-serif;
 

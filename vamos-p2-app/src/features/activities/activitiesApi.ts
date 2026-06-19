@@ -16,9 +16,9 @@ function getRestUrl(): string {
 }
 
 export async function fetchActivities(category?: string): Promise<Activity[]> {
-  const url = new URL(`${getRestUrl()}vamos-p2/v1/activities`);
-  if (category) url.searchParams.set('category', category);
-  const res = await fetch(url.toString(), { credentials: 'include' });
+  const base = `${getRestUrl()}vamos-p2/v1/activities`;
+  const qs = category ? `?category=${encodeURIComponent(category)}` : '';
+  const res = await fetch(`${base}${qs}`, { credentials: 'include' });
   if (!res.ok) throw new Error('Failed to load activities');
   return res.json() as Promise<Activity[]>;
 }
