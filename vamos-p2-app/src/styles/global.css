@@ -143,9 +143,10 @@
 
 /* Base font for entire app — !important needed to beat WP theme body/h1-h6 rules */
 #vamos-p2-root {
+  /* Only font-family !important to beat WP Edubin theme.
+     color/background NOT set here — would override component-level color rules
+     (id specificity 1,0,0 beats class selectors 0,n,0 even without !important) */
   font-family: "Satoshi", system-ui, -apple-system, sans-serif !important;
-  color: #111827 !important;
-  background: #ffffff !important;
 }
 
 /* All children inherit Satoshi unless overridden below */
@@ -166,12 +167,6 @@
 /* Clash Display utility — must beat WP h1/h2/h3 theme rules */
 #vamos-p2-root .font-\[Clash_Display\] {
   font-family: "Clash Display", sans-serif !important;
-}
-
-/* WP Edubin theme applies red bg to ALL buttons.
-   Reset only buttons without an explicit bg- class — lets our bg-[#E31E24] etc. work untouched */
-#vamos-p2-root button:not([class*="bg-"]) {
-  background-color: transparent !important;
 }
 
 /* WP theme also styles inputs/selects */
