@@ -127,7 +127,8 @@ export function HomePage() {
               Explore activities <ArrowRight size={15} />
             </motion.button>
             <motion.button
-              className="h-12 px-8 border border-white/40 text-white font-medium text-[14px] hover:border-white/80 hover:bg-white/8 transition-all rounded-[6px]"
+              className="h-12 px-8 border border-white/40 text-white font-medium text-[14px] hover:border-white/80 transition-all rounded-[6px]"
+              style={{ backgroundColor: 'transparent' }}
               onClick={() => navigate('/recommendations')}
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
@@ -188,7 +189,7 @@ export function HomePage() {
               <motion.button
                 key={key}
                 className="relative group overflow-hidden text-left cursor-pointer rounded-[10px]"
-                style={{ aspectRatio: '3/4' }}
+                style={{ aspectRatio: '3/4', backgroundColor: 'transparent' }}
                 onClick={() => navigate('/activities?category=' + key)}
                 initial={{ opacity: 0, y: 16 }}
                 whileInView={{ opacity: 1, y: 0 }}

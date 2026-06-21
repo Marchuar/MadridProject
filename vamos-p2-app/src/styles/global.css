@@ -168,6 +168,29 @@
   font-family: "Clash Display", sans-serif !important;
 }
 
+/* WP Edubin theme applies red bg to ALL buttons.
+   Reset only buttons without an explicit bg- class — lets our bg-[#E31E24] etc. work untouched */
+#vamos-p2-root button:not([class*="bg-"]) {
+  background-color: transparent !important;
+}
+
+/* WP theme also styles inputs/selects */
+#vamos-p2-root input,
+#vamos-p2-root select,
+#vamos-p2-root textarea {
+  font-family: "Satoshi", system-ui, sans-serif !important;
+  font-size: 1rem !important;
+  color: #111827 !important;
+  background-color: #ffffff !important;
+  border: 1.5px solid #D4D4D0 !important;
+  border-radius: 6px !important;
+  outline: none;
+}
+#vamos-p2-root input:focus,
+#vamos-p2-root select:focus {
+  border-color: #E31E24 !important;
+}
+
 /* WP theme resets links — restore our styles */
 #vamos-p2-root a {
   color: inherit !important;
