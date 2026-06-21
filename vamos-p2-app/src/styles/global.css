@@ -1,16 +1,13 @@
 /* ── Fontshare: Clash Display + Satoshi — must be first ── */
 @import url('https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&f[]=satoshi@400,500,700&display=swap');
-
-/* ── Tailwind v4: theme + utilities ONLY — NO preflight (preflight would reset all WP styles) ── */
-@import "tailwindcss/theme" layer(theme);
-@import "tailwindcss/utilities" layer(utilities);
+@import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 @import './tokens.css';
 
 @custom-variant dark (&:is(.dark *));
 
-/* ── Tailwind v4 theme tokens ── */
+/* ── Tailwind v4 theme ── */
 @theme {
   --color-red: #E31E24;
   --color-red-hover: #C91018;
@@ -49,7 +46,7 @@
   --radius-pill: 6px;
 }
 
-/* ── shadcn/ui CSS variables — scoped to root (CSS custom props are global, but only consumed inside #vamos-p2-root) ── */
+/* ── shadcn/ui CSS variables ── */
 :root {
   --background: oklch(0.98 0 100);
   --foreground: oklch(0.17 0.02 250);
@@ -120,61 +117,68 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
-/* ══════════════════════════════════════════════════════════
-   ALL styles below are scoped to #vamos-p2-root
-   so they NEVER leak into WordPress page styles
-   ══════════════════════════════════════════════════════════ */
+/* ── Base resets ── */
+@layer base {
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root { font-size: 16px; }
+  body {
+    font-family: var(--font-body);
+    font-size: 1rem;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    line-height: 1.5;
+    overflow-x: hidden;
+  }
+  #vamos-p2-root { width: 100%; min-height: 100vh; overflow-x: hidden; }
+  a { color: inherit; text-decoration: none; }
+  button { font-family: inherit; cursor: pointer; }
+  img { max-width: 100%; display: block; }
+}
 
+/* ── WordPress compatibility ──────────────────────────────────────────────────
+   WP themes (Edubin) inject font-family and reset styles that override
+   our Tailwind utilities. We use high-specificity #vamos-p2-root selectors
+   to win the CSS cascade without touching the rest of the WP page.
+   ────────────────────────────────────────────────────────────────────────── */
+
+/* Base font for entire app — !important needed to beat WP theme body/h1-h6 rules */
 #vamos-p2-root {
-  /* Base resets — isolated to our app only */
-  font-family: "Satoshi", system-ui, -apple-system, sans-serif;
-  font-size: 16px;
-  line-height: 1.5;
-  color: #111827;
-  background: #ffffff;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  overflow-x: hidden;
-  width: 100%;
-  min-height: 100vh;
+  font-family: "Satoshi", system-ui, -apple-system, sans-serif !important;
+  color: #111827 !important;
+  background: #ffffff !important;
 }
 
-#vamos-p2-root *,
-#vamos-p2-root *::before,
-#vamos-p2-root *::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  border-width: 0;
-  border-style: solid;
-  border-color: var(--color-border, #EAEAE8);
-}
-
-#vamos-p2-root a {
-  color: inherit;
-  text-decoration: none;
-}
-
-#vamos-p2-root button {
+/* All children inherit Satoshi unless overridden below */
+#vamos-p2-root * {
   font-family: inherit;
-  cursor: pointer;
-  background: transparent;
-  border: none;
 }
 
-#vamos-p2-root img {
-  max-width: 100%;
-  display: block;
+/* Clash Display for headings and explicit font-display classes */
+#vamos-p2-root h1,
+#vamos-p2-root h2,
+#vamos-p2-root h3,
+#vamos-p2-root h4,
+#vamos-p2-root h5,
+#vamos-p2-root h6 {
+  font-family: "Clash Display", sans-serif !important;
 }
 
-#vamos-p2-root ::-webkit-scrollbar { width: 5px; height: 5px; }
-#vamos-p2-root ::-webkit-scrollbar-track { background: transparent; }
-#vamos-p2-root ::-webkit-scrollbar-thumb { background: #D4D4D0; border-radius: 3px; }
-
-#vamos-p2-root :focus-visible {
-  outline: 2px solid #E31E24;
-  outline-offset: 2px;
+/* Clash Display utility — must beat WP h1/h2/h3 theme rules */
+#vamos-p2-root .font-\[Clash_Display\] {
+  font-family: "Clash Display", sans-serif !important;
 }
+
+/* WP theme resets links — restore our styles */
+#vamos-p2-root a {
+  color: inherit !important;
+  text-decoration: none !important;
+}
+
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--color-border-strong); border-radius: 3px; }
+
+:focus-visible { outline: 2px solid var(--color-red); outline-offset: 2px; }
 
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(16px); }
@@ -195,10 +199,14 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  #vamos-p2-root *,
-  #vamos-p2-root *::before,
-  #vamos-p2-root *::after {
+  *, *::before, *::after {
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+@layer base {
+  * { @apply border-border outline-ring/50; }
+  body { @apply bg-background text-foreground; }
+  html { @apply font-sans; }
 }
