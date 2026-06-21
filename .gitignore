@@ -2,7 +2,7 @@
 .idea/
 *.log
 
-# Playwright recordings/screenshots (non-essential)
+# Playwright recordings/screenshots
 .playwright-mcp/
 screenshot-*.png
 
@@ -11,3 +11,12 @@ vamos-p2-app/node_modules/
 
 # Keep dist/ committed — needed for jsDelivr CDN delivery
 # vamos-p2-app/dist/
+
+# Not needed for deployment
+client input/
+memory/
+plans/
+*.jpeg
+*.png
+*.yml
+VamosMadrid-ClaudeDesign-Brief.md
