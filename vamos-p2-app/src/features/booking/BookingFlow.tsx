@@ -8,12 +8,6 @@ import { getActivityImage } from '../activities/activityImages';
 import { useUserActivities, type BookedEntry } from '../../shared/store/userActivitiesStore';
 import styles from './BookingFlow.module.css';
 
-const PEOPLE_OPTIONS = [
-  { value: 1, label: 'Solo', sub: 'Just you' },
-  { value: 2, label: 'Duo', sub: '2 people' },
-  { value: 3, label: 'Trio', sub: '3 people' },
-  { value: 4, label: 'Group', sub: '4+ people' },
-];
 
 interface BookingFlowProps {
   activity: Activity | null;

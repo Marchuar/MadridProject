@@ -70,7 +70,7 @@ export function HomePage() {
             src="/madrid-evening.jpg"
             alt="Madrid evening skyline"
             className="w-full h-full object-cover"
-            fetchpriority="high"
+            fetchPriority="high"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/40 to-black/65" />
         </motion.div>

@@ -82,7 +82,7 @@ export function RecommendationsPage() {
 
         {!isLoading && !error && picks.length > 0 && (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {picks.map(({ activity, score, reasons }, i) => {
+            {picks.map(({ activity, reasons }, i) => {
               const img = getActivityImage(activity.title, activity.category, activity.imageUrl || undefined);
               const catColor = CAT_COLORS[activity.category] ?? '#E31E24';
               const catLabel = CAT_LABELS[activity.category] ?? activity.category;
