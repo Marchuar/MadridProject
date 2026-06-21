@@ -191,11 +191,11 @@
   border-color: #E31E24 !important;
 }
 
-/* WP theme resets links — restore our styles */
+/* WP theme underlines all links — remove underlines inside our app */
 #vamos-p2-root a {
-  color: inherit !important;
   text-decoration: none !important;
 }
+/* Note: NOT overriding color here — Tailwind text-* classes handle that correctly */
 
 ::-webkit-scrollbar { width: 5px; height: 5px; }
 ::-webkit-scrollbar-track { background: transparent; }
