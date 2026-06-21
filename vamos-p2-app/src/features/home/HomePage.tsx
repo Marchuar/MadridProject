@@ -11,13 +11,17 @@ import { TextAnimate } from '../../shared/components/MagicUI/TextAnimate';
 import { TypingAnimation } from '../../shared/components/MagicUI/TypingAnimation';
 import useEmblaCarousel from 'embla-carousel-react';
 import Autoplay from 'embla-carousel-autoplay';
+import { getAssetsBase } from '../activities/activityImages';
 
-const CATEGORY_PHOTOS = [
-  { key: 'flamenco',      label: 'Flamenco',    img: '/activities/flamenco.webp',  color: '#E11D48' },
-  { key: 'museum',        label: 'Art & Culture',img: '/activities/prado.webp',     color: '#7C3AED' },
-  { key: 'cooking_class', label: 'Food & Wine',  img: '/activities/tapas.webp',     color: '#EA580C' },
-  { key: 'day_trip',      label: 'Day Trips',    img: '/activities/toledo.webp',    color: '#0C3F75' },
-];
+function CATEGORY_PHOTOS() {
+  const b = getAssetsBase();
+  return [
+    { key: 'flamenco',      label: 'Flamenco',    img: b + '/activities/flamenco.webp',  color: '#E11D48' },
+    { key: 'museum',        label: 'Art & Culture',img: b + '/activities/prado.webp',     color: '#7C3AED' },
+    { key: 'cooking_class', label: 'Food & Wine',  img: b + '/activities/tapas.webp',     color: '#EA580C' },
+    { key: 'day_trip',      label: 'Day Trips',    img: b + '/activities/toledo.webp',    color: '#0C3F75' },
+  ];
+}
 
 const CAT_ICONS: Record<string, React.ElementType> = {
   flamenco: Music2, museum: Building2, city_tour: MapIcon,
@@ -46,6 +50,7 @@ export function HomePage() {
   const heroOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
 
   const firstName = user?.displayName?.split(' ')[0] ?? '';
+  const assetsBase = getAssetsBase();
 
   const autoplay = useRef(Autoplay({ delay: 3200, stopOnInteraction: true }));
   const [emblaRef, emblaApi] = useEmblaCarousel(
@@ -67,7 +72,7 @@ export function HomePage() {
         {/* Parallax background */}
         <motion.div className="absolute inset-0" style={{ y: heroY }}>
           <img
-            src="/madrid-evening.jpg"
+            src={assetsBase + '/madrid-evening.jpg'}
             alt="Madrid evening skyline"
             className="w-full h-full object-cover"
             fetchPriority="high"
@@ -179,7 +184,7 @@ export function HomePage() {
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            {CATEGORY_PHOTOS.map(({ key, label, img, color }, i) => (
+            {CATEGORY_PHOTOS().map(({ key, label, img, color }, i) => (
               <motion.button
                 key={key}
                 className="relative group overflow-hidden text-left cursor-pointer rounded-[10px]"
@@ -321,7 +326,7 @@ export function HomePage() {
       {/* ── DISCOVER STRIP ── */}
       <section className="relative py-24 md:py-32 overflow-hidden">
         <img
-          src="/el-retiro.avif"
+          src={assetsBase + '/el-retiro.avif'}
           alt="El Retiro park"
           className="absolute inset-0 w-full h-full object-cover"
         />
@@ -382,14 +387,14 @@ export function HomePage() {
           <div className="overflow-hidden" ref={emblaRef}>
             <div className="flex" style={{ marginLeft: '-16px' }}>
               {[
-                { src: '/madrid-evening.jpg',         label: 'Gran Vía at sunset' },
-                { src: '/activities/flamenco.webp',   label: 'Flamenco night' },
-                { src: '/activities/bernabeu.webp',   label: 'Santiago Bernabéu' },
-                { src: '/activities/malasana.webp',   label: 'Malasaña streets' },
-                { src: '/activities/prado.webp',      label: 'Prado Museum' },
-                { src: '/activities/churros.webp',    label: 'Churros & chocolate' },
-                { src: '/activities/reina_sofia.webp',label: 'Reina Sofía' },
-                { src: '/activities/retiro.webp',     label: 'El Retiro park' },
+                { src: assetsBase + '/madrid-evening.jpg',         label: 'Gran Vía at sunset' },
+                { src: assetsBase + '/activities/flamenco.webp',   label: 'Flamenco night' },
+                { src: assetsBase + '/activities/bernabeu.webp',   label: 'Santiago Bernabéu' },
+                { src: assetsBase + '/activities/malasana.webp',   label: 'Malasaña streets' },
+                { src: assetsBase + '/activities/prado.webp',      label: 'Prado Museum' },
+                { src: assetsBase + '/activities/churros.webp',    label: 'Churros & chocolate' },
+                { src: assetsBase + '/activities/reina_sofia.webp',label: 'Reina Sofía' },
+                { src: assetsBase + '/activities/retiro.webp',     label: 'El Retiro park' },
               ].map(({ src, label }) => (
                 <div
                   key={src}

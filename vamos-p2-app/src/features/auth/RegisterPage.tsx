@@ -53,7 +53,7 @@ export function RegisterPage() {
       {/* Left: photo panel */}
       <div className="hidden lg:flex lg:w-1/2 xl:w-[55%] relative overflow-hidden">
         <img
-          src="/activities/retiro.webp"
+          src={((window as any).vamosp2Config?.assetsUrl ?? '') + '/activities/retiro.webp'}
           alt="El Retiro park"
           className="absolute inset-0 w-full h-full object-cover"
         />

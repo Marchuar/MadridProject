@@ -47,7 +47,7 @@ export function LoginPage() {
       {/* Left: photo panel */}
       <div className="hidden lg:flex lg:w-1/2 xl:w-[55%] relative overflow-hidden">
         <img
-          src="/cuatro-torres-madrid.jpg"
+          src={((window as any).vamosp2Config?.assetsUrl ?? '') + '/cuatro-torres-madrid.jpg'}
           alt="Cuatro Torres Madrid"
           className="absolute inset-0 w-full h-full object-cover"
         />

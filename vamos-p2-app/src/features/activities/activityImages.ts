@@ -1,5 +1,7 @@
-// Maps activity titles / categories to extracted poster images
-// Images live in public/activities/ as WebP files
+// Returns the CDN base URL for public assets (empty string in dev = Vite dev server root)
+export function getAssetsBase(): string {
+  return (window as any).vamosp2Config?.assetsUrl ?? '';
+}
 
 const IMAGE_BY_TITLE: Record<string, string> = {
   'flamenco':                   '/activities/flamenco.webp',
@@ -65,13 +67,13 @@ const FALLBACK_BY_CATEGORY: Record<string, string> = {
 };
 
 export function getActivityImage(title: string, category?: string, imageUrl?: string): string {
+  const base = getAssetsBase();
   if (imageUrl) return imageUrl;
   const key = title.toLowerCase().trim();
-  if (IMAGE_BY_TITLE[key]) return IMAGE_BY_TITLE[key];
-  // Partial match
+  if (IMAGE_BY_TITLE[key]) return base + IMAGE_BY_TITLE[key];
   for (const [k, v] of Object.entries(IMAGE_BY_TITLE)) {
-    if (key.includes(k) || k.includes(key)) return v;
+    if (key.includes(k) || k.includes(key)) return base + v;
   }
-  if (category && FALLBACK_BY_CATEGORY[category]) return FALLBACK_BY_CATEGORY[category];
-  return '/activities/retiro.webp';
+  if (category && FALLBACK_BY_CATEGORY[category]) return base + FALLBACK_BY_CATEGORY[category];
+  return base + '/activities/retiro.webp';
 }
