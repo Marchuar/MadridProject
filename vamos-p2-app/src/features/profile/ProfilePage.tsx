@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Save, User, Settings, Star } from 'lucide-react';
+import { User, Settings, Star } from 'lucide-react';
 import { useAuth } from '../auth/useAuth';
 import { useToast } from '../../shared/components/Toast/Toast';
 import { Button } from '../../shared/components/Button/Button';
@@ -216,8 +216,7 @@ export function ProfilePage() {
       </div>
 
       <div className={styles.saveBar}>
-        <Button size="lg" loading={isSaving} onClick={handleSave}>
-          <Save size={18} aria-hidden="true" />
+        <Button size="lg" fullWidth loading={isSaving} onClick={handleSave}>
           Save changes
         </Button>
       </div>

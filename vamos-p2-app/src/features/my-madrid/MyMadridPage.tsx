@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Tabs, ConfigProvider } from 'antd';
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 import { Heart, Calendar, CheckCircle, Clock, Users, ArrowRight } from 'lucide-react';
 import dayjs from 'dayjs';
 import { fetchActivities, type Activity } from '../activities/activitiesApi';

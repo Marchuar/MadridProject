@@ -1,12 +1,11 @@
 import { useState, type FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { Eye, EyeOff, MapPin } from 'lucide-react';
+import { motion } from 'motion/react';
+import { Eye, EyeOff } from 'lucide-react';
 import { useAuth } from './useAuth';
 import { useToast } from '../../shared/components/Toast/Toast';
 import { Button } from '../../shared/components/Button/Button';
 import { FormField } from '../../shared/components/FormField/FormField';
-import styles from './AuthPages.module.css';
 
 export function RegisterPage() {
   const { register } = useAuth();
@@ -50,90 +49,124 @@ export function RegisterPage() {
   };
 
   return (
-    <div className={styles.page}>
-      <motion.main
-        className={styles.card}
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4, ease: 'easeOut' }}
-      >
-        <div className={styles.brandHeader}>
-          <div className={styles.brandIcon}>
-            <MapPin size={22} color="white" />
+    <div className="min-h-dvh flex">
+      {/* Left: photo panel */}
+      <div className="hidden lg:flex lg:w-1/2 xl:w-[55%] relative overflow-hidden">
+        <img
+          src="/activities/retiro.webp"
+          alt="El Retiro park"
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-black/30" />
+        <div className="relative z-10 flex flex-col justify-between h-full p-12">
+          <div className="flex items-center gap-2.5">
+            <div className="w-7 h-7 bg-[#E31E24] flex items-center justify-center">
+              <span className="font-[Clash_Display] font-black text-white text-[13px]">V</span>
+            </div>
+            <span className="font-[Clash_Display] font-black text-white text-[15px] tracking-tight">
+              VamosMadrid
+            </span>
           </div>
           <div>
-            <h1 className={styles.brandName}>VamosMadrid</h1>
-            <p className={styles.brandTagline}>Discover Madrid, your way</p>
+            <blockquote className="font-[Clash_Display] font-black text-white leading-tight mb-4"
+              style={{ fontSize: 'clamp(28px, 3.5vw, 44px)' }}>
+              "Life is short. Madrid is long."
+            </blockquote>
+            <p className="text-white/55 text-[14px]">Join thousands exploring the city</p>
           </div>
         </div>
+      </div>
 
-        <div className={styles.formHeader}>
-          <h2 className={styles.formTitle}>Create your account</h2>
-          <p className={styles.formSubtitle}>Join to get personalized activity recommendations</p>
+      {/* Right: form panel */}
+      <div className="flex-1 flex flex-col justify-center px-8 md:px-12 xl:px-16 bg-white overflow-y-auto">
+        <div className="lg:hidden flex items-center gap-2.5 mb-12">
+          <div className="w-7 h-7 bg-[#E31E24] flex items-center justify-center">
+            <span className="font-[Clash_Display] font-black text-white text-[13px]">V</span>
+          </div>
+          <span className="font-[Clash_Display] font-black text-[#111827] text-[15px] tracking-tight">
+            VamosMadrid
+          </span>
         </div>
 
-        <form onSubmit={handleSubmit} className={styles.form} noValidate>
-          <FormField
-            label="Username"
-            type="text"
-            autoComplete="username"
-            value={username}
-            onChange={e => setUsername(e.target.value)}
-            error={errors.username}
-            placeholder="Choose a username"
-            required
-          />
-          <FormField
-            label="Email"
-            type="email"
-            autoComplete="email"
-            value={email}
-            onChange={e => setEmail(e.target.value)}
-            error={errors.email}
-            placeholder="your@email.com"
-            required
-          />
-          <FormField
-            label="Password"
-            type={showPassword ? 'text' : 'password'}
-            autoComplete="new-password"
-            value={password}
-            onChange={e => setPassword(e.target.value)}
-            error={errors.password}
-            placeholder="At least 8 characters"
-            required
-            rightSlot={
-              <button
-                type="button"
-                onClick={() => setShowPassword(v => !v)}
-                aria-label={showPassword ? 'Hide password' : 'Show password'}
-                className={styles.eyeBtn}
-              >
-                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-              </button>
-            }
-          />
-          <FormField
-            label="Confirm Password"
-            type={showPassword ? 'text' : 'password'}
-            autoComplete="new-password"
-            value={confirm}
-            onChange={e => setConfirm(e.target.value)}
-            error={errors.confirm}
-            placeholder="Repeat your password"
-            required
-          />
+        <motion.div
+          className="w-full max-w-[400px]"
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, ease: 'easeOut' }}
+        >
+          <div className="mb-8">
+            <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-[#E31E24] mb-3">Get started</p>
+            <h1 className="font-[Clash_Display] font-black text-[#111827] text-[36px] leading-none mb-2">
+              Create account
+            </h1>
+            <p className="text-[14px] text-[#9CA3AF]">Join to get personalised activity recommendations</p>
+          </div>
 
-          <Button type="submit" fullWidth size="lg" loading={isLoading}>
-            Create account
-          </Button>
-        </form>
+          <form onSubmit={handleSubmit} className="flex flex-col gap-5" noValidate>
+            <FormField
+              label="Username"
+              type="text"
+              autoComplete="username"
+              value={username}
+              onChange={e => setUsername(e.target.value)}
+              error={errors.username}
+              placeholder="Choose a username"
+              required
+            />
+            <FormField
+              label="Email"
+              type="email"
+              autoComplete="email"
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+              error={errors.email}
+              placeholder="your@email.com"
+              required
+            />
+            <FormField
+              label="Password"
+              type={showPassword ? 'text' : 'password'}
+              autoComplete="new-password"
+              value={password}
+              onChange={e => setPassword(e.target.value)}
+              error={errors.password}
+              placeholder="At least 8 characters"
+              required
+              rightSlot={
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(v => !v)}
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
+                  className="flex items-center justify-center text-[#9CA3AF] hover:text-[#5F6B7A] transition-colors p-1"
+                >
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+              }
+            />
+            <FormField
+              label="Confirm Password"
+              type={showPassword ? 'text' : 'password'}
+              autoComplete="new-password"
+              value={confirm}
+              onChange={e => setConfirm(e.target.value)}
+              error={errors.confirm}
+              placeholder="Repeat your password"
+              required
+            />
 
-        <p className={styles.switchLink}>
-          Already have an account?{' '}
-          <Link to="/login">Sign in</Link>
-        </p>
-      </motion.main>
+            <Button type="submit" fullWidth size="lg" loading={isLoading}>
+              Create account
+            </Button>
+          </form>
+
+          <p className="mt-8 text-center text-[14px] text-[#9CA3AF] border-t border-[#E5E5E3] pt-6">
+            Already have an account?{' '}
+            <Link to="/login" className="text-[#E31E24] font-semibold hover:opacity-75 transition-opacity">
+              Sign in
+            </Link>
+          </p>
+        </motion.div>
+      </div>
     </div>
   );
 }

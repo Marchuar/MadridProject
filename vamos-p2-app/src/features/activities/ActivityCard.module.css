@@ -1,15 +1,16 @@
 .card {
   background: var(--color-surface);
-  border-radius: var(--radius-xl);
+  border-radius: var(--radius-lg);
   overflow: hidden;
   display: flex;
   flex-direction: column;
   cursor: pointer;
   height: 100%;
-  box-shadow: var(--shadow-sm);
   border: 1px solid var(--color-border);
-  transition: box-shadow var(--transition-base), border-color var(--transition-base);
+  box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+  transition: box-shadow var(--transition-base), transform var(--transition-base);
 }
+.card:hover { box-shadow: 0 8px 28px rgba(0,0,0,0.13); transform: translateY(-3px); }
 
 .cardCompact .photo { height: 160px; }
 .cardCompact .body { padding: var(--space-3); }
@@ -18,7 +19,7 @@
 /* ── Photo ── */
 .photo {
   position: relative;
-  height: 200px;
+  height: 220px;
   overflow: hidden;
   flex-shrink: 0;
 }
@@ -27,19 +28,14 @@
   height: 100%;
   object-fit: cover;
   display: block;
-  transition: transform 0.5s ease;
+  transition: transform 0.6s ease;
 }
 .card:hover .photoImg { transform: scale(1.04); }
 
 .photoOverlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    to bottom,
-    rgba(0,0,0,0.08) 0%,
-    rgba(0,0,0,0) 40%,
-    rgba(0,0,0,0.45) 100%
-  );
+  background: linear-gradient(to bottom, rgba(0,0,0,0) 50%, rgba(0,0,0,0.35) 100%);
 }
 
 .catBadge {
@@ -48,52 +44,46 @@
   left: var(--space-3);
   height: 22px;
   padding: 0 var(--space-2);
-  border-radius: var(--radius-full);
+  border-radius: var(--radius-sm);
   color: #fff;
   font-size: 10px;
   font-weight: 700;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   display: inline-flex;
   align-items: center;
-  backdrop-filter: blur(4px);
 }
 
 .likeBtn {
   position: absolute;
   top: var(--space-3);
   right: var(--space-3);
-  width: 32px;
-  height: 32px;
+  width: 30px;
+  height: 30px;
   border-radius: var(--radius-full);
-  background: rgba(255,255,255,0.9);
+  background: rgba(255,255,255,0.92);
   border: none;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   color: var(--color-text-secondary);
-  backdrop-filter: blur(4px);
   transition: background var(--transition-fast), color var(--transition-fast);
 }
 .likeBtn:hover { background: white; }
-.likeBtnActive {
-  background: #FEE2E2;
-  color: #E11D48;
-}
+.likeBtnActive { background: #FEE2E2; color: #E11D48; }
 
 .priceBadge {
   position: absolute;
   bottom: var(--space-3);
   right: var(--space-3);
-  background: rgba(0,0,0,0.72);
+  background: rgba(0,0,0,0.75);
   color: white;
   font-family: var(--font-heading);
   font-weight: 700;
   font-size: var(--text-sm);
-  padding: 3px 10px;
-  border-radius: var(--radius-full);
-  backdrop-filter: blur(4px);
+  padding: 3px 8px;
+  border-radius: var(--radius-sm);
 }
 
 .soldOutBadge {
@@ -107,7 +97,7 @@
   font-family: var(--font-heading);
   font-weight: 700;
   font-size: var(--text-sm);
-  letter-spacing: 0.08em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
 }
 
@@ -122,8 +112,8 @@
 
 .title {
   font-family: var(--font-serif);
-  font-size: var(--text-lg);
-  font-weight: 600;
+  font-size: var(--text-base);
+  font-weight: 700;
   color: var(--color-text-primary);
   line-height: var(--leading-snug);
   letter-spacing: -0.01em;
@@ -180,11 +170,11 @@
 
 .bookBtn {
   height: 32px;
-  padding: 0 var(--space-3);
-  background: var(--color-navy);
+  padding: 0 var(--space-4);
+  background: var(--color-red);
   color: white;
   border: none;
-  border-radius: var(--radius-full);
+  border-radius: var(--radius-md);
   font-family: var(--font-heading);
   font-weight: 700;
   font-size: 12px;
@@ -192,8 +182,9 @@
   display: flex;
   align-items: center;
   gap: 4px;
+  letter-spacing: 0.04em;
   transition: background var(--transition-fast);
   flex-shrink: 0;
 }
-.bookBtn:hover:not(:disabled) { background: var(--color-navy-mid); }
+.bookBtn:hover:not(:disabled) { background: var(--color-red-hover); }
 .bookBtn:disabled { opacity: 0.4; cursor: not-allowed; }

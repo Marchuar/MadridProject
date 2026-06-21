@@ -1,10 +1,10 @@
 .page {
-  padding: var(--space-8);
-  background: var(--color-bg);
+  padding: calc(64px + var(--space-8)) var(--space-8) var(--space-8);
+  background: #fff;
   min-height: 100%;
 }
 @media (max-width: 767px) {
-  .page { padding: var(--space-4) var(--space-4) calc(var(--nav-height-mobile) + var(--space-6)); }
+  .page { padding: calc(64px + var(--space-5)) var(--space-4) var(--space-8); }
 }
 
 .header { margin-bottom: var(--space-6); }

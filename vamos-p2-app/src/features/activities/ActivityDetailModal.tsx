@@ -1,5 +1,5 @@
 import { Modal } from 'antd';
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 import { MapPin, Clock, Users, Heart, X, ArrowRight } from 'lucide-react';
 import type { Activity } from './activitiesApi';
 import { getActivityImage } from './activityImages';

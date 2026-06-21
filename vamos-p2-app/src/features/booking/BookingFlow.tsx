@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Modal, Steps, DatePicker, ConfigProvider } from 'antd';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 import { CheckCircle, Users, Calendar, ArrowRight, ArrowLeft } from 'lucide-react';
 import dayjs, { Dayjs } from 'dayjs';
 import type { Activity } from '../activities/activitiesApi';
@@ -119,7 +119,40 @@ export function BookingFlow({ activity, open, onClose, onBack }: BookingFlowProp
                   <div className={styles.dateStep}>
                     <h3 className={styles.stepTitle}>Choose a date</h3>
                     <p className={styles.stepSub}>When do you want to go?</p>
-                    <ConfigProvider theme={{ token: { colorPrimary: '#07294D' } }}>
+
+                    {/* Quick date slots — next 7 days */}
+                    <div style={{ display: 'flex', gap: 8, overflowX: 'auto', paddingBottom: 4, marginBottom: 16, scrollbarWidth: 'none' }}>
+                      {Array.from({ length: 7 }, (_, i) => {
+                        const d = dayjs().add(i + 1, 'day');
+                        const isSelected = selectedDate?.isSame(d, 'day');
+                        return (
+                          <motion.button
+                            key={i}
+                            style={{
+                              flexShrink: 0, minWidth: 56, padding: '8px 12px', borderRadius: 12,
+                              border: isSelected ? 'none' : '1.5px solid #EAEAE8',
+                              background: isSelected ? '#E31E24' : 'white',
+                              color: isSelected ? 'white' : '#111827',
+                              cursor: 'pointer', textAlign: 'center', lineHeight: 1.3,
+                            }}
+                            onClick={() => setSelectedDate(d)}
+                            whileTap={{ scale: 0.95 }}
+                          >
+                            <div style={{ fontSize: 10, fontWeight: 600, opacity: 0.7, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                              {d.format('ddd')}
+                            </div>
+                            <div style={{ fontSize: 20, fontWeight: 900, fontFamily: 'Clash Display, sans-serif' }}>
+                              {d.format('D')}
+                            </div>
+                            <div style={{ fontSize: 10, fontWeight: 600, opacity: 0.7 }}>
+                              {d.format('MMM')}
+                            </div>
+                          </motion.button>
+                        );
+                      })}
+                    </div>
+
+                    <ConfigProvider theme={{ token: { colorPrimary: '#E31E24' } }}>
                       <DatePicker
                         value={selectedDate}
                         onChange={d => setSelectedDate(d)}
@@ -127,34 +160,58 @@ export function BookingFlow({ activity, open, onClose, onBack }: BookingFlowProp
                         format="D MMMM YYYY"
                         className={styles.datePicker}
                         size="large"
-                        placeholder="Select date"
+                        placeholder="Or pick a custom date"
                         allowClear={false}
                       />
                     </ConfigProvider>
                   </div>
                 )}
 
-                {/* Step 1: People */}
+                {/* Step 1: People — stepper + quick presets */}
                 {step === 1 && (
                   <div className={styles.peopleStep}>
                     <h3 className={styles.stepTitle}>How many people?</h3>
-                    <p className={styles.stepSub}>Price: €{activity.price} × {selectedPeople} = <strong>€{totalPrice}</strong></p>
-                    <div className={styles.peopleGrid}>
-                      {PEOPLE_OPTIONS.map(opt => (
+                    <p className={styles.stepSub}>€{activity.price} × {selectedPeople} = <strong>€{totalPrice}</strong></p>
+
+                    {/* Stepper */}
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '20px', margin: '20px 0' }}>
+                      <motion.button
+                        style={{ width: 44, height: 44, borderRadius: '50%', border: '2px solid #EAEAE8', background: 'white', fontSize: 24, fontWeight: 700, color: '#111827', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: selectedPeople <= 1 ? 'not-allowed' : 'pointer', opacity: selectedPeople <= 1 ? 0.4 : 1 }}
+                        onClick={() => setSelectedPeople(p => Math.max(1, p - 1))}
+                        whileTap={{ scale: 0.95 }}
+                        disabled={selectedPeople <= 1}
+                      >−</motion.button>
+                      <span style={{ fontFamily: 'Clash Display, sans-serif', fontWeight: 900, fontSize: 48, color: '#111827', minWidth: 60, textAlign: 'center', lineHeight: 1 }}>
+                        {selectedPeople}
+                      </span>
+                      <motion.button
+                        style={{ width: 44, height: 44, borderRadius: '50%', border: '2px solid #EAEAE8', background: 'white', fontSize: 24, fontWeight: 700, color: '#111827', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: selectedPeople >= 50 ? 'not-allowed' : 'pointer', opacity: selectedPeople >= 50 ? 0.4 : 1 }}
+                        onClick={() => setSelectedPeople(p => Math.min(50, p + 1))}
+                        whileTap={{ scale: 0.95 }}
+                        disabled={selectedPeople >= 50}
+                      >+</motion.button>
+                    </div>
+
+                    {/* Quick preset chips */}
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, justifyContent: 'center' }}>
+                      {[1, 2, 3, 4, 6, 8, 10, 12, 15, 20].map(n => (
                         <motion.button
-                          key={opt.value}
-                          className={[styles.peopleCard, selectedPeople === opt.value ? styles.peopleCardActive : ''].join(' ')}
-                          onClick={() => setSelectedPeople(opt.value)}
-                          whileTap={{ scale: 0.97 }}
+                          key={n}
+                          style={{
+                            height: 34, minWidth: 40, padding: '0 12px', borderRadius: 9999,
+                            border: selectedPeople === n ? 'none' : '1.5px solid #EAEAE8',
+                            background: selectedPeople === n ? '#E31E24' : 'white',
+                            color: selectedPeople === n ? 'white' : '#5F6B7A',
+                            fontWeight: 600, fontSize: 13, cursor: 'pointer',
+                          }}
+                          onClick={() => setSelectedPeople(n)}
+                          whileTap={{ scale: 0.95 }}
                         >
-                          <span className={styles.peopleEmoji}>
-                            {'👤'.repeat(Math.min(opt.value, 4))}
-                          </span>
-                          <span className={styles.peopleLabel}>{opt.label}</span>
-                          <span className={styles.peopleSub}>{opt.sub}</span>
+                          {n}
                         </motion.button>
                       ))}
                     </div>
+                    <p style={{ textAlign: 'center', fontSize: 12, color: '#9CA3AF', marginTop: 8 }}>Use +/− for any number up to 50</p>
                   </div>
                 )}
 

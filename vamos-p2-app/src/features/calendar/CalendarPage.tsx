@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Calendar, ConfigProvider } from 'antd';
 import type { Dayjs } from 'dayjs';
 import dayjs from 'dayjs';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 import { Clock, Users, X, CalendarDays } from 'lucide-react';
 import { fetchActivities, type Activity } from '../activities/activitiesApi';
 import { getActivityImage } from '../activities/activityImages';

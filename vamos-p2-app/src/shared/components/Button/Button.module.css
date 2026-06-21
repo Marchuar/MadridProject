@@ -19,9 +19,9 @@
 .btn:disabled { opacity: 0.45; cursor: not-allowed; }
 
 /* Sizes */
-.sm { height: 36px; padding: 0 var(--space-4); font-size: var(--text-sm); border-radius: var(--radius-pill); }
-.md { height: 44px; padding: 0 var(--space-5); font-size: var(--text-sm); border-radius: var(--radius-pill); }
-.lg { height: 52px; padding: 0 var(--space-6); font-size: var(--text-base); border-radius: var(--radius-pill); }
+.sm { height: 36px; padding: 0 var(--space-4); font-size: var(--text-sm); border-radius: var(--radius-md); }
+.md { height: 44px; padding: 0 var(--space-5); font-size: var(--text-sm); border-radius: var(--radius-md); }
+.lg { height: 52px; padding: 0 var(--space-6); font-size: var(--text-base); border-radius: var(--radius-md); }
 .fullWidth { width: 100%; }
 
 /* Variants */

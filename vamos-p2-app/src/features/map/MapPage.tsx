@@ -105,7 +105,7 @@ export function MapPage() {
                   fillColor: color,
                   fillOpacity: 0.92,
                 }}
-                eventHandlers={{ click: () => openDetail(activity) }}
+                eventHandlers={{}}
               >
                 <Popup className={styles.popup} maxWidth={260} closeButton={false}>
                   <div className={styles.popupCard}>

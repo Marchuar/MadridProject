@@ -1,16 +1,13 @@
 import { Outlet } from 'react-router-dom';
-import { Sidebar } from '../shared/components/Navigation/Sidebar';
-import { BottomNav } from '../shared/components/Navigation/BottomNav';
-import styles from './AppShell.module.css';
+import { TopNav } from '../shared/components/Navigation/TopNav';
 
 export function AppShell() {
   return (
-    <div className={styles.shell}>
-      <Sidebar />
-      <main className={styles.main}>
+    <div className="min-h-dvh bg-white">
+      <TopNav />
+      <main id="main-content" className="w-full">
         <Outlet />
       </main>
-      <BottomNav />
     </div>
   );
 }

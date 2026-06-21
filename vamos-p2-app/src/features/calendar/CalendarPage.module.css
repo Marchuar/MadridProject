@@ -1,11 +1,11 @@
 .page {
-  padding: var(--space-8);
-  background: var(--color-bg);
+  padding: calc(64px + var(--space-8)) var(--space-8) var(--space-8);
+  background: #fff;
   min-height: 100%;
   position: relative;
 }
 @media (max-width: 767px) {
-  .page { padding: var(--space-4) var(--space-4) calc(var(--nav-height-mobile) + var(--space-6)); }
+  .page { padding: calc(64px + var(--space-5)) var(--space-4) var(--space-8); }
 }
 
 .header {
@@ -42,8 +42,10 @@
   border-bottom: 1px solid var(--color-border);
 }
 .calendar :global(.ant-picker-cell-selected .ant-picker-cell-inner) {
-  background: var(--color-navy) !important;
+  background: rgba(227, 30, 36, 0.08) !important;
+  border: 2px solid #E31E24 !important;
   border-radius: var(--radius-md) !important;
+  color: #E31E24 !important;
 }
 .calendar :global(.ant-picker-cell-today .ant-picker-cell-inner::before) {
   border-color: var(--color-red) !important;

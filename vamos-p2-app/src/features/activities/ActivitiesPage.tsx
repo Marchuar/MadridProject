@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 import { Map, Search, X } from 'lucide-react';
 import { fetchActivities, type Activity } from './activitiesApi';
 import { ActivityCard } from './ActivityCard';
@@ -61,7 +61,7 @@ export function ActivitiesPage() {
   };
 
   return (
-    <div className={styles.page}>
+    <div className={`${styles.page} pt-16`}>
       <header className={styles.pageHeader}>
         <div className={styles.headerTop}>
           <div>
@@ -111,7 +111,7 @@ export function ActivitiesPage() {
 
       {/* Loading skeletons */}
       {isLoading && (
-        <div className={styles.grid}>
+        <div className={styles.gridWrapper}><div className={styles.grid}>
           {Array.from({ length: 8 }).map((_, i) => (
             <div key={i} className={styles.skeleton} aria-hidden="true">
               <div className={styles.skeletonPhoto} />
@@ -122,7 +122,7 @@ export function ActivitiesPage() {
               </div>
             </div>
           ))}
-        </div>
+        </div></div>
       )}
 
       {!isLoading && error && (
@@ -143,6 +143,7 @@ export function ActivitiesPage() {
       )}
 
       {!isLoading && !error && filtered.length > 0 && (
+        <div className={styles.gridWrapper}>
         <motion.div
           className={styles.grid}
           variants={{ show: { transition: { staggerChildren: 0.06 } } }}
@@ -163,6 +164,7 @@ export function ActivitiesPage() {
             ))}
           </AnimatePresence>
         </motion.div>
+        </div>
       )}
 
       <ActivityDetailModal
