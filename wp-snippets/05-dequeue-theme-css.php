@@ -1,38 +1,67 @@
 <?php
 /**
- * WPCode: Strip non-essential CSS on /projecto-2/
+ * WPCode: CSS management + header/footer + button fix on /projecto-2/
  *
- * Two-layer approach:
- *  1. wp_enqueue_scripts (priority 9999) — dequeues from the WP queue
- *  2. style_loader_tag filter — intercepts the final <link> output;
- *     catches styles enqueued after priority 9999 (Gutenberg blocks, Stripe, etc.)
+ * Page uses template "elementor_header_footer" which shows the Elementor
+ * global header (ID 13092) and footer (ID 13079) around our React SPA content.
  *
- * Keep list: only essential handles that must load on this page.
- * Joinchat is kept so the WhatsApp chat widget retains its styling.
- *
- * NOTE: Edubin's Customizer inline <style> (--edubin-btn-bg-color etc.) cannot
- * be dequeued — it's added via wp_head directly. Override its variables in CSS
- * instead (see our React bundle's global.css).
+ * Four problems solved here:
+ *  1. CSS dequeue — keep only what's needed for header/footer + our bundle
+ *  2. Elementor single-template bypass — Elementor overrides page content with
+ *     its own 51,000px of built content; we disable that so the_content() runs
+ *     our React div instead
+ *  3. Button red background — Edubin's customizer <style> hardcodes
+ *     button { background: #d90723 } as a plain hex value (not a CSS variable),
+ *     so CSS-variable overrides don't help. PHP output buffer strips those rules.
+ *  4. JoinChat widget — kept so "Need help?" button remains styled
  */
 
+// ── 1. CSS keep list ──────────────────────────────────────────────────────────
 $p2_keep = [
-    'admin-bar',            // WP admin toolbar
-    'dashicons',            // WP admin icons
-    'wpcode-admin-bar-css', // WPCode admin bar badge
-    'vamos-p2-app',         // our React bundle CSS
-    'joinchat',             // WhatsApp chat widget — keep styled
+    // WP admin
+    'admin-bar',
+    'dashicons',
+    'wpcode-admin-bar-css',
+
+    // Our React bundle
+    'vamos-p2-app',
+
+    // WhatsApp chat widget
+    'joinchat',
+
+    // Elementor core (needed for header/footer widget rendering)
+    'elementor-frontend',
+    'elementor-global-css',
+
+    // Elementor global header (ID 13092) and footer (ID 13079) CSS
+    'elementor-post-13092',
+    'elementor-post-13079',
+
+    // Elementor icon sets used in the header/footer
+    'elementor-icons',
+    'elementor-icons-shared-0',
+    'elementor-icons-fa-solid',
+    'elementor-icons-fa-regular',
+    'elementor-icons-fa-brands',
+
+    // Edubin theme base CSS (needed for header/footer typography + layout)
+    'edubin-core',
+    'edubin-global-theme',
+    'edubin-theme',
+    'edubin-fonts',
+    'edubin-flaticon',
+
+    // Font awesome (header/footer social icons)
+    'font-awesome',
+    'fontawesome',
 ];
 
-// ── Layer 1: dequeue from WP styles queue ───────────────────────────────────
+// Layer 1: dequeue from WP queue (catches most stylesheets)
 add_action( 'wp_enqueue_scripts', function () use ( $p2_keep ) {
-    if ( ! is_page( 'projecto-2' ) ) {
-        return;
-    }
+    if ( ! is_page( 'projecto-2' ) ) return;
 
     global $wp_styles;
-    if ( empty( $wp_styles->queue ) ) {
-        return;
-    }
+    if ( empty( $wp_styles->queue ) ) return;
 
     foreach ( $wp_styles->queue as $handle ) {
         if ( ! in_array( $handle, $p2_keep, true ) ) {
@@ -42,17 +71,75 @@ add_action( 'wp_enqueue_scripts', function () use ( $p2_keep ) {
     }
 }, 9999 );
 
-// ── Layer 2: filter the final <link> HTML output ─────────────────────────────
-// Catches anything that slipped past layer 1 (enqueued at priority > 9999,
-// or added by Gutenberg block rendering, WooCommerce, Stripe, etc.)
+// Layer 2: suppress <link> tags that slipped past Layer 1
 add_filter( 'style_loader_tag', function ( $tag, $handle ) use ( $p2_keep ) {
-    if ( ! is_page( 'projecto-2' ) ) {
-        return $tag;
-    }
-
-    if ( ! in_array( $handle, $p2_keep, true ) ) {
-        return ''; // suppress the <link> tag entirely
-    }
-
-    return $tag;
+    if ( ! is_page( 'projecto-2' ) ) return $tag;
+    return in_array( $handle, $p2_keep, true ) ? $tag : '';
 }, 9999, 2 );
+
+
+// ── 2. Disable Elementor "single" location on /projecto-2/ ───────────────────
+// The elementor_header_footer template calls elementor_theme_do_location('single')
+// which renders all the Elementor-built page content (~51,000px tall).
+// By returning false for this page, Elementor falls back to the_content()
+// which our filter replaces with <div id="vamos-p2-root"></div>.
+add_filter( 'elementor/theme/need_override_location', function ( $need_override, $location ) {
+    if ( is_page( 'projecto-2' ) && 'single' === $location ) {
+        return false;
+    }
+    return $need_override;
+}, 10, 2 );
+
+
+// ── 3. Strip button background rules from Edubin inline <style> ───────────────
+// Edubin's Customizer outputs a large <style> block via wp_head (not enqueue
+// system — can't be dequeued) containing:
+//   button, input[type="button"], input[type="submit"] { background: #d90723; }
+//   button:hover, button:focus { background-color: #d8223a; }
+// These are plain hex values (NOT CSS variables), so our --edubin-btn-bg-color
+// override in CSS has no effect. We strip them via output buffering.
+add_action( 'template_redirect', function () {
+    if ( ! is_page( 'projecto-2' ) ) return;
+
+    ob_start( function ( $html ) {
+        return preg_replace_callback(
+            '/<style\b[^>]*>([\s\S]*?)<\/style>/i',
+            function ( $m ) {
+                $css = $m[1];
+
+                // Only process Edubin's Customizer style (identified by its variables)
+                if ( strpos( $css, '--edubin-primary-color' ) === false &&
+                     strpos( $css, '--edubin-btn-bg-color' ) === false ) {
+                    return $m[0];
+                }
+
+                // Process each CSS rule block individually
+                $css = preg_replace_callback(
+                    '/([^{}@]+)\{([^}]*)\}/s',
+                    function ( $rule ) {
+                        $selector = $rule[1];
+                        $props    = $rule[2];
+
+                        // Does the selector contain button or input[type=button/submit]?
+                        $is_btn = preg_match(
+                            '/\b(button|input\s*\[\s*type\s*=\s*["\']?\s*(button|submit)\s*["\']?\s*\])/i',
+                            $selector
+                        );
+
+                        if ( $is_btn ) {
+                            // Remove background and border-color declarations
+                            $props = preg_replace( '/\s*background(-color)?:[^;]+;/i', '', $props );
+                            $props = preg_replace( '/\s*border-color:[^;]+;/i', '', $props );
+                        }
+
+                        return $rule[1] . '{' . $props . '}';
+                    },
+                    $css
+                );
+
+                return '<style>' . $css . '</style>';
+            },
+            $html
+        );
+    } );
+} );
