@@ -148,8 +148,9 @@
      border-color is set without resetting width back to 0 */
   #vamos-p2-root * { @apply border-border outline-ring/50; }
 
-  /* Link reset — utilities / component CSS override text-decoration freely */
-  #vamos-p2-root a { text-decoration: none; }
+  /* Link reset — color:inherit here so text-white/text-* utilities in
+     @layer utilities can override the color freely */
+  #vamos-p2-root a { text-decoration: none; color: inherit; }
 
   /* List reset */
   #vamos-p2-root ol,
@@ -228,6 +229,23 @@
   font-family: "Clash Display", sans-serif !important;
 }
 
+/* All children of headings also get Clash Display — needed because animation
+   components (TextAnimate) wrap each word in <span>, which otherwise gets
+   Satoshi from the * rule above. Specificity (1,0,1) beats * (1,0,0) ✓ */
+#vamos-p2-root h1 *,
+#vamos-p2-root h2 *,
+#vamos-p2-root h3 *,
+#vamos-p2-root h4 *,
+#vamos-p2-root h5 *,
+#vamos-p2-root h6 * {
+  font-family: "Clash Display", sans-serif !important;
+}
+
+/* Children of any element with font-[Clash_Display] also inherit Clash Display */
+#vamos-p2-root .font-\[Clash_Display\] * {
+  font-family: "Clash Display", sans-serif !important;
+}
+
 /* WP theme aggressively resets input styles — override with !important */
 #vamos-p2-root input,
 #vamos-p2-root select,
@@ -246,19 +264,27 @@
 }
 
 /* WP admin bar is position:fixed at top:0, z-index:99999, height 32px (desktop)
-   or 46px (mobile ≤782px). Offset our fixed header so it sits below the bar. */
+   or 46px (mobile ≤782px). Offset our fixed header so it sits below the bar.
+   Also reduce min-height so admin bar's html margin-top:32px doesn't cause
+   an extra 32px of page overflow and unwanted vertical scroll. */
 html.admin-bar #vamos-p2-root header {
   top: 32px !important;
+}
+html.admin-bar #vamos-p2-root {
+  min-height: calc(100vh - 32px);
 }
 @media screen and (max-width: 782px) {
   html.admin-bar #vamos-p2-root header {
     top: 46px !important;
   }
+  html.admin-bar #vamos-p2-root {
+    min-height: calc(100vh - 46px);
+  }
 }
 
-/* WP theme underlines all links — remove inside our app */
+/* WP theme underlines all links — !important needed to beat WP theme rules.
+   color:inherit is in @layer base above so text-white/text-* utilities work */
 #vamos-p2-root a {
-  color: inherit;
   text-decoration: none !important;
 }
 
