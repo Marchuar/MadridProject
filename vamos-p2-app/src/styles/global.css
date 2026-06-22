@@ -130,6 +130,17 @@
    ────────────────────────────────────────────────────────────────────────── */
 body { margin: 0; padding: 0; }
 
+/* ── Hide WP plugin widgets that add empty space on our Canvas page ──────────
+   PhotoSwipe (.pswp) is static-positioned and adds 52px to page flow.
+   CookieYes revisit button and WooLentor quickview add unwanted fixed elements.
+   ────────────────────────────────────────────────────────────────────────── */
+#photoswipe-fullscreen-dialog,
+.pswp,
+#woolentor-quickview-modal,
+.cky-btn-revisit-wrapper {
+  display: none !important;
+}
+
 /* ── @layer base: scoped preflight ───────────────────────────────────────────
    Rules here are LOW-PRIORITY (base < utilities in the layer cascade).
    This means @layer utilities classes (border-2, h-full, list-*, etc.) can

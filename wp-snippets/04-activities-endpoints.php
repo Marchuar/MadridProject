@@ -94,11 +94,33 @@ function vamos_p2_get_activities( WP_REST_Request $req ) {
                 $image_url = (string) get_the_post_thumbnail_url( $post->ID, 'medium_large' );
             }
 
+            // Normalize date to ISO 8601 so JS new Date() can parse it reliably.
+            // ACF datetime picker returns "DD/MM/YYYY H:i" (e.g. "04/07/2026 20:00")
+            // or "DD/MM/YYYY g:i a" (e.g. "04/07/2026 8:00 pm") depending on locale.
+            $date_raw = (string) ( $fields['date_and_time'] ?? '' );
+            $date_iso = $date_raw;
+            if ( $date_raw ) {
+                $ts = false;
+                // Try ACF's common output formats
+                foreach ( [ 'd/m/Y H:i', 'd/m/Y g:i a', 'd/m/Y g:i A', 'Y-m-d H:i:s', 'Y-m-d H:i' ] as $fmt ) {
+                    $dt = DateTime::createFromFormat( $fmt, trim( $date_raw ) );
+                    if ( $dt ) { $ts = $dt->getTimestamp(); break; }
+                }
+                if ( $ts ) {
+                    $date_iso = gmdate( 'Y-m-d\TH:i:s', $ts );
+                }
+            }
+
+            // Fallback image: use activity featured image if ACF field is not set
+            if ( ! $image_url ) {
+                $image_url = (string) get_the_post_thumbnail_url( $post->ID, 'large' );
+            }
+
             $items[] = [
                 'id'          => $post->ID,
                 'title'       => $post->post_title,
                 'category'    => (string) ( $fields['category'] ?? '' ),
-                'date'        => (string) ( $fields['date_and_time'] ?? '' ),
+                'date'        => $date_iso,
                 'location'    => (string) ( $fields['location'] ?? '' ),
                 'price'       => floatval( $fields['price'] ?? 0 ),
                 'slotsLeft'   => $slots_left,

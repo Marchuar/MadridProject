@@ -72,8 +72,12 @@ add_action( 'template_redirect', function () {
                             $selector
                         );
                         if ( $is_btn ) {
+                            // Strip background/border — prevents red button bg from Edubin
                             $props = preg_replace( '/\s*background(-color)?:[^;]+;/i', '', $props );
                             $props = preg_replace( '/\s*border-color:[^;]+;/i', '', $props );
+                            // Also strip color:#fff — Edubin forces white text on button:hover
+                            // which turns "View all" link and carousel arrows invisible on hover
+                            $props = preg_replace( '/\s*color\s*:\s*(#fff(fff)?|white)\s*(!important)?\s*;/i', '', $props );
                         }
                         return $rule[1] . '{' . $props . '}';
                     },
