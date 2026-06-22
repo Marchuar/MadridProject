@@ -90,7 +90,7 @@ export function MapPage() {
           />
 
           {filtered.map(activity => {
-            const coords = getActivityCoords(activity.title, activity.category);
+            const coords = getActivityCoords(activity.title, activity.category, activity.location);
             const color = CAT_COLORS[activity.category] ?? '#E31E24';
             const img = getActivityImage(activity.title, activity.category, activity.imageUrl || undefined);
 

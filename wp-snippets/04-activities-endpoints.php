@@ -126,7 +126,8 @@ function vamos_p2_get_activities( WP_REST_Request $req ) {
                 'slotsLeft'   => $slots_left,
                 'slotsTotal'  => $slots_total ?: 20,
                 'imageUrl'    => $image_url,
-                'description' => wp_strip_all_tags( $post->post_content ),
+                // Use ACF description field first, fall back to post body content
+                'description' => wp_strip_all_tags( $fields['description'] ?? $post->post_content ?? '' ),
             ];
         }
         return rest_ensure_response( $items );
