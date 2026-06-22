@@ -31,8 +31,9 @@ $p2_keep = [
 
     // Elementor core + global kit (needed for header/footer size/typography/colors)
     'elementor-frontend',
-    'elementor-global-css',   // kit/global typography, colors, spacing
+    'elementor-global-css',   // global CSS handle (alias)
     'elementor-common',       // common base styles
+    'elementor-post-13',      // Elementor active kit (ID 13) — global typography/colors/spacing
 
     // Elementor global header (ID 13092) and footer (ID 13079) CSS
     'elementor-post-13092',
