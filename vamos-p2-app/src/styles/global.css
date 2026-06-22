@@ -148,6 +148,8 @@ body { margin: 0; padding: 0; }
     box-sizing: border-box;
     border-width: 0;
     border-style: solid;
+    margin: 0;
+    padding: 0;
   }
 
   /* shadcn/ui default border + outline colors — comes AFTER border-width:0 so
