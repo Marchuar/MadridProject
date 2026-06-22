@@ -124,6 +124,12 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
+/* ── Global resets (outside any layer — needed before our app renders) ──────
+   body margin: browser default is 8px; without Edubin CSS reset it shows as
+   a visible gap around the entire page.
+   ────────────────────────────────────────────────────────────────────────── */
+body { margin: 0; padding: 0; }
+
 /* ── @layer base: scoped preflight ───────────────────────────────────────────
    Rules here are LOW-PRIORITY (base < utilities in the layer cascade).
    This means @layer utilities classes (border-2, h-full, list-*, etc.) can
@@ -189,6 +195,30 @@
      #vamos-p2-root .cls    → (1,1,0) — Clash Display via utility class (beats *)
      #vamos-p2-root input   → (1,0,1) — WP-specific input overrides (beats *)
    ────────────────────────────────────────────────────────────────────────── */
+
+/* ── Neutralize Edubin Customizer inline CSS ──────────────────────────────────
+   Edubin theme injects a large <style> tag (via wp_head, not wp_enqueue_style)
+   that sets CSS custom properties on :root including:
+     --edubin-btn-bg-color: #d90723  → makes ALL buttons red
+     --edubin-primary-color: #d90723 → used for links, accents
+   WP can't dequeue inline <style> tags, so we override the variables within
+   our root. CSS custom properties are inherited, so setting them on
+   #vamos-p2-root cascades to all descendants — Edubin's var() references
+   inside our app get transparent/inherit instead of #d90723.
+   ────────────────────────────────────────────────────────────────────────── */
+#vamos-p2-root {
+  --edubin-primary-color: transparent;
+  --edubin-secondary-color: transparent;
+  --edubin-tertiary-color: inherit;
+  --edubin-content-color: inherit;
+  --edubin-btn-bg-color: transparent;
+  --edubin-btn-color: inherit;
+  --edubin-btn-border-color: transparent;
+  --edubin-btn-hover-bg-color: transparent;
+  --edubin-btn-hover-color: inherit;
+  --edubin-btn-hover-border-color: transparent;
+  --edubin-font-family: inherit;
+}
 
 /* App root baseline */
 #vamos-p2-root {
