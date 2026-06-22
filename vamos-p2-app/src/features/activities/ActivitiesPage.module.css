@@ -127,10 +127,15 @@
   white-space: nowrap;
   transition: all var(--transition-fast);
 }
-.filterPill:hover { border-color: var(--color-text-primary); color: var(--color-text-primary); }
+.filterPill:not(.filterPillActive):hover { border-color: var(--color-text-primary); color: var(--color-text-primary); }
 .filterPillActive {
   background: var(--color-text-primary);
   border-color: var(--color-text-primary);
+  color: white;
+}
+.filterPillActive:hover {
+  background: var(--color-navy-mid);
+  border-color: var(--color-navy-mid);
   color: white;
 }
 
