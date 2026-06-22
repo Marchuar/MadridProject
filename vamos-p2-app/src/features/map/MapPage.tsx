@@ -77,8 +77,8 @@ export function MapPage() {
         )}
 
         <MapContainer
-          center={[40.4168, -3.7038]}
-          zoom={13}
+          center={[40.4300, -3.6900]}
+          zoom={11}
           className={styles.map}
           zoomControl={false}
         >
