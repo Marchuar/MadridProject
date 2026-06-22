@@ -29,9 +29,10 @@ $p2_keep = [
     // WhatsApp chat widget
     'joinchat',
 
-    // Elementor core (needed for header/footer widget rendering)
+    // Elementor core + global kit (needed for header/footer size/typography/colors)
     'elementor-frontend',
-    'elementor-global-css',
+    'elementor-global-css',   // kit/global typography, colors, spacing
+    'elementor-common',       // common base styles
 
     // Elementor global header (ID 13092) and footer (ID 13079) CSS
     'elementor-post-13092',
@@ -43,6 +44,12 @@ $p2_keep = [
     'elementor-icons-fa-solid',
     'elementor-icons-fa-regular',
     'elementor-icons-fa-brands',
+    'elementor-icons-ekiticons',
+    'elementor-icons-edubin-custom-icons',
+
+    // ElementsKit (used for mega menu / header widgets)
+    'ekit-widget-styles',
+    'ekit-responsive',
 
     // Edubin theme base CSS (needed for header/footer typography + layout)
     'edubin-core',
@@ -54,6 +61,10 @@ $p2_keep = [
     // Font awesome (header/footer social icons)
     'font-awesome',
     'fontawesome',
+
+    // Swiper (used by header slider if any)
+    'swiper',
+    'e-swiper',
 ];
 
 // Layer 1: dequeue from WP queue (catches most stylesheets)
