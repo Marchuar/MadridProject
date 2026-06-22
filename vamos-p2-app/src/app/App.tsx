@@ -75,7 +75,7 @@ export function App() {
           algorithm: antTheme.defaultAlgorithm,
           token: {
             colorPrimary: '#E31E24',
-            fontFamily: "'Sansation', Arial, sans-serif",
+            fontFamily: "'Satoshi', system-ui, sans-serif",
             borderRadius: 10,
             colorBgBase: '#FFFFFF',
             colorTextBase: '#111827',

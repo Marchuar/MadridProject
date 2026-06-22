@@ -2,13 +2,10 @@
 @import url('https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&f[]=satoshi@400,500,700&display=swap');
 
 /*
-  Import Tailwind v4 WITHOUT preflight.
-  The default `@import "tailwindcss"` includes a global preflight that resets
-  *, html, body, h1-h6, a, ul, img etc. — this breaks the WP Edubin theme layout
-  when our bundle is loaded on /projecto-2/.
-  On localhost the whole page is ours so it didn't matter; in WP it destroys the
-  WP nav, headings, links and list styles outside #vamos-p2-root.
-  Scoped equivalents are applied under #vamos-p2-root further below.
+  Import Tailwind v4 WITHOUT preflight — the default `@import "tailwindcss"` includes
+  a global preflight that resets *, html, body, h1-h6, a, ul, img across the WHOLE WP
+  page, breaking Edubin theme nav/headings/lists outside #vamos-p2-root.
+  Scoped replacements live in @layer base below.
 */
 @import "tailwindcss/theme";
 @import "tailwindcss/utilities";
@@ -114,7 +111,6 @@
   --color-primary-foreground: var(--primary-foreground);
   --color-primary: var(--primary);
   --color-popover-foreground: var(--popover-foreground);
-  --color-popover: var(--card-foreground);
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
   --color-foreground: var(--foreground);
@@ -128,23 +124,72 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
-/* ── WordPress compatibility ──────────────────────────────────────────────────
-   Since we removed the global Tailwind preflight, we add scoped equivalents
-   here — all under #vamos-p2-root so they never touch the WP page outside
-   our React root. On localhost the whole page is our app, so no difference.
-   ────────────────────────────────────────────────────────────────────────── */
+/* ── @layer base: scoped preflight ───────────────────────────────────────────
+   Rules here are LOW-PRIORITY (base < utilities in the layer cascade).
+   This means @layer utilities classes (border-2, h-full, list-*, etc.) can
+   always OVERRIDE these base defaults — correct behavior for a component app.
 
-/* Scoped box-sizing + border-style reset (replaces Tailwind preflight `*` rule).
-   border:0 solid is needed so Tailwind `border` utilities only need to add width. */
-#vamos-p2-root,
-#vamos-p2-root *,
-#vamos-p2-root *::before,
-#vamos-p2-root *::after {
-  box-sizing: border-box;
-  border: 0 solid;
+   We use border-width + border-style as SEPARATE properties (NOT the `border`
+   shorthand) to avoid resetting border-color, which @apply border-border sets
+   in the same layer immediately after.
+   ────────────────────────────────────────────────────────────────────────── */
+@layer base {
+  /* Box-sizing and border reset — utilities override freely */
+  #vamos-p2-root,
+  #vamos-p2-root *,
+  #vamos-p2-root *::before,
+  #vamos-p2-root *::after {
+    box-sizing: border-box;
+    border-width: 0;
+    border-style: solid;
+  }
+
+  /* shadcn/ui default border + outline colors — comes AFTER border-width:0 so
+     border-color is set without resetting width back to 0 */
+  #vamos-p2-root * { @apply border-border outline-ring/50; }
+
+  /* Link reset — utilities / component CSS override text-decoration freely */
+  #vamos-p2-root a { text-decoration: none; }
+
+  /* List reset */
+  #vamos-p2-root ol,
+  #vamos-p2-root ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Image reset — height:auto here is BASE priority, so h-full / h-* utilities
+     in @layer utilities WIN and carousel images correctly fill their containers */
+  #vamos-p2-root img,
+  #vamos-p2-root video {
+    max-width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  /* Button reset */
+  #vamos-p2-root button {
+    cursor: pointer;
+    background-color: transparent;
+    border-radius: 0;
+  }
 }
 
-/* App root baseline — replaces global `body` + `html` preflight rules */
+/* ── Unlayered WP compatibility ───────────────────────────────────────────────
+   These are UNLAYERED (higher priority than any @layer rule).
+   Font rules use !important because WP Edubin theme sets body{font:'Sansation'}
+   and that bleeds into our app via CSS inheritance — !important is the only
+   reliable way to override it across all WP stylesheet combinations.
+
+   Rule priority within !important: higher specificity wins.
+     #vamos-p2-root *       → (1,0,0) — Satoshi on everything
+     #vamos-p2-root h1..h6  → (1,0,1) — Clash Display on headings (beats *)
+     #vamos-p2-root .cls    → (1,1,0) — Clash Display via utility class (beats *)
+     #vamos-p2-root input   → (1,0,1) — WP-specific input overrides (beats *)
+   ────────────────────────────────────────────────────────────────────────── */
+
+/* App root baseline */
 #vamos-p2-root {
   width: 100%;
   min-height: 100vh;
@@ -158,12 +203,15 @@
   color: var(--foreground);
 }
 
-/* All children inherit Satoshi unless explicitly overridden */
+/* Force Satoshi on every element — WP Edubin theme body font (Sansation) bleeds
+   in via CSS inheritance even with !important on #vamos-p2-root because WP
+   stylesheets load after ours at equal or higher specificity. Explicit !important
+   value (not `inherit`) is the only reliable fix. */
 #vamos-p2-root * {
-  font-family: inherit;
+  font-family: "Satoshi", system-ui, -apple-system, sans-serif !important;
 }
 
-/* Clash Display for headings — beat WP Edubin h1-h6 rules */
+/* Clash Display for headings — specificity (1,0,1) beats * rule (1,0,0) */
 #vamos-p2-root h1,
 #vamos-p2-root h2,
 #vamos-p2-root h3,
@@ -175,42 +223,12 @@
   font-family: "Clash Display", sans-serif !important;
 }
 
-/* Clash Display utility — must beat WP h1/h2/h3 theme rules */
+/* Clash Display via explicit Tailwind arbitrary class — (1,1,0) beats * */
 #vamos-p2-root .font-\[Clash_Display\] {
   font-family: "Clash Display", sans-serif !important;
 }
 
-/* Link reset (replaces Tailwind preflight `a` rule) */
-#vamos-p2-root a {
-  color: inherit;
-  text-decoration: none !important;
-}
-
-/* List reset (replaces Tailwind preflight `ol,ul` rule) */
-#vamos-p2-root ol,
-#vamos-p2-root ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-/* Media reset (replaces Tailwind preflight `img,video` rule) */
-#vamos-p2-root img,
-#vamos-p2-root video {
-  max-width: 100%;
-  height: auto;
-  display: block;
-}
-
-/* Button reset */
-#vamos-p2-root button {
-  font-family: inherit;
-  cursor: pointer;
-  background-color: transparent;
-  border-radius: 0;
-}
-
-/* WP theme also styles inputs/selects — override with !important */
+/* WP theme aggressively resets input styles — override with !important */
 #vamos-p2-root input,
 #vamos-p2-root select,
 #vamos-p2-root textarea {
@@ -225,6 +243,23 @@
 #vamos-p2-root input:focus,
 #vamos-p2-root select:focus {
   border-color: #E31E24 !important;
+}
+
+/* WP admin bar is position:fixed at top:0, z-index:99999, height 32px (desktop)
+   or 46px (mobile ≤782px). Offset our fixed header so it sits below the bar. */
+html.admin-bar #vamos-p2-root header {
+  top: 32px !important;
+}
+@media screen and (max-width: 782px) {
+  html.admin-bar #vamos-p2-root header {
+    top: 46px !important;
+  }
+}
+
+/* WP theme underlines all links — remove inside our app */
+#vamos-p2-root a {
+  color: inherit;
+  text-decoration: none !important;
 }
 
 ::-webkit-scrollbar { width: 5px; height: 5px; }
@@ -256,10 +291,4 @@
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
   }
-}
-
-@layer base {
-  /* Scoped to our app root only — NOT the WP page.
-     Removed global `body`, `html`, and bare `*` rules that were leaking into WP. */
-  #vamos-p2-root * { @apply border-border outline-ring/50; }
 }
