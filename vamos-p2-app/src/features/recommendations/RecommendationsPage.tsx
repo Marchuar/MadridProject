@@ -89,7 +89,7 @@ export function RecommendationsPage() {
             <p className="text-sm text-[#9CA3AF] leading-relaxed">Add your interests and budget so we can pick the best activities for you.</p>
             <Link
               to="/profile"
-              className="mt-2 inline-flex items-center gap-2 h-10 px-6 bg-[#E31E24] text-white text-[13px] font-semibold rounded-[8px] hover:bg-[#C91018] transition-colors"
+              className="mt-2 inline-flex items-center gap-2 h-10 px-6 bg-[#E31E24] text-white text-[13px] font-semibold rounded-[8px] hover:bg-[#C91018] hover:text-white transition-colors"
             >
               Go to Profile <ArrowRight size={14} />
             </Link>
