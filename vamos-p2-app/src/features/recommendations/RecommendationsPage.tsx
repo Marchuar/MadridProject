@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { Sparkles, Heart, MapPin, Clock, ArrowRight, Users } from 'lucide-react';
 import { useAuth } from '../auth/useAuth';
@@ -25,6 +26,7 @@ const CAT_LABELS: Record<string, string> = {
 export function RecommendationsPage() {
   const { user } = useAuth();
   const [picks, setPicks] = useState<ScoredActivity[]>([]);
+  const [profileEmpty, setProfileEmpty] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedActivity, setSelectedActivity] = useState<Activity | null>(null);
@@ -35,10 +37,22 @@ export function RecommendationsPage() {
 
   useEffect(() => {
     if (!user) return;
-    Promise.all([fetchActivities(), apiGetProfile()])
-      .then(([activities, profile]) => { setPicks(scoreActivities(activities, profile)); })
-      .catch(e => setError(e instanceof Error ? e.message : 'Could not load recommendations'))
-      .finally(() => setIsLoading(false));
+    apiGetProfile()
+      .then(profile => {
+        if (!profile.budget && profile.interests.length === 0) {
+          setProfileEmpty(true);
+          setIsLoading(false);
+          return;
+        }
+        fetchActivities()
+          .then(activities => setPicks(scoreActivities(activities, profile)))
+          .catch(e => setError(e instanceof Error ? e.message : 'Could not load recommendations'))
+          .finally(() => setIsLoading(false));
+      })
+      .catch(e => {
+        setError(e instanceof Error ? e.message : 'Could not load recommendations');
+        setIsLoading(false);
+      });
   }, [user]);
 
   return (
@@ -68,11 +82,25 @@ export function RecommendationsPage() {
           </div>
         )}
 
-        {!isLoading && error && (
+        {!isLoading && profileEmpty && (
+          <div className="border border-[#E5E5E3] rounded-[10px] p-12 flex flex-col items-center gap-4 text-center max-w-sm mx-auto mt-8">
+            <Sparkles size={32} color="#E31E24" />
+            <p className="font-[Clash_Display] font-black text-[#111827] text-xl">Complete your profile</p>
+            <p className="text-sm text-[#9CA3AF] leading-relaxed">Add your interests and budget so we can pick the best activities for you.</p>
+            <Link
+              to="/profile"
+              className="mt-2 inline-flex items-center gap-2 h-10 px-6 bg-[#E31E24] text-white text-[13px] font-semibold rounded-[8px] hover:bg-[#C91018] transition-colors"
+            >
+              Go to Profile <ArrowRight size={14} />
+            </Link>
+          </div>
+        )}
+
+        {!isLoading && !profileEmpty && error && (
           <div className="border border-[#E5E5E3] rounded-[10px] p-10 text-center text-[#9CA3AF] text-sm">{error}</div>
         )}
 
-        {!isLoading && !error && picks.length === 0 && (
+        {!isLoading && !profileEmpty && !error && picks.length === 0 && (
           <div className="border border-[#E5E5E3] rounded-[10px] p-12 flex flex-col items-center gap-4 text-center max-w-sm mx-auto mt-8">
             <Sparkles size={32} color="#E31E24" />
             <p className="font-[Clash_Display] font-black text-[#111827] text-xl">Nothing yet</p>
@@ -80,7 +108,7 @@ export function RecommendationsPage() {
           </div>
         )}
 
-        {!isLoading && !error && picks.length > 0 && (
+        {!isLoading && !profileEmpty && !error && picks.length > 0 && (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {picks.map(({ activity, reasons }, i) => {
               const img = getActivityImage(activity.title, activity.category, activity.imageUrl || undefined);

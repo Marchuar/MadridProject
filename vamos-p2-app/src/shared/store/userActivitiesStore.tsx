@@ -1,6 +1,7 @@
 // TODO: migrate to WP REST API endpoints (vamos-p2/v1/user-activities) in next iteration
 import { createContext, useCallback, useContext, useEffect, useState } from 'react';
 import type React from 'react';
+import { useAuth } from '../../features/auth/useAuth';
 
 export interface BookedEntry {
   activityId: number;
@@ -36,14 +37,17 @@ function load<T>(key: string, fallback: T): T {
 
 export const UserActivitiesContext = createContext<UserActivitiesState | null>(null);
 
-export function UserActivitiesProvider({ children }: { children: React.ReactNode }) {
-  const [liked, setLiked] = useState<number[]>(() => load('vamos_liked', []));
-  const [booked, setBooked] = useState<BookedEntry[]>(() => load('vamos_booked', []));
-  const [visited, setVisited] = useState<number[]>(() => load('vamos_visited', []));
+// Scoped to a specific userId — remounts via key={userId} when the user changes
+function UserActivitiesProviderInner({ userId, children }: { userId: number; children: React.ReactNode }) {
+  const k = (name: string) => `vamos_${name}_u${userId}`;
 
-  useEffect(() => { localStorage.setItem('vamos_liked', JSON.stringify(liked)); }, [liked]);
-  useEffect(() => { localStorage.setItem('vamos_booked', JSON.stringify(booked)); }, [booked]);
-  useEffect(() => { localStorage.setItem('vamos_visited', JSON.stringify(visited)); }, [visited]);
+  const [liked, setLiked] = useState<number[]>(() => load(k('liked'), []));
+  const [booked, setBooked] = useState<BookedEntry[]>(() => load(k('booked'), []));
+  const [visited, setVisited] = useState<number[]>(() => load(k('visited'), []));
+
+  useEffect(() => { localStorage.setItem(k('liked'), JSON.stringify(liked)); }, [liked]);
+  useEffect(() => { localStorage.setItem(k('booked'), JSON.stringify(booked)); }, [booked]);
+  useEffect(() => { localStorage.setItem(k('visited'), JSON.stringify(visited)); }, [visited]);
 
   const toggleLike = useCallback((id: number) => {
     setLiked(prev => prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]);
@@ -69,6 +73,12 @@ export function UserActivitiesProvider({ children }: { children: React.ReactNode
       {children}
     </UserActivitiesContext.Provider>
   );
+}
+
+export function UserActivitiesProvider({ children }: { children: React.ReactNode }) {
+  const { user } = useAuth();
+  const userId = user?.id ?? 0;
+  return <UserActivitiesProviderInner key={userId} userId={userId}>{children}</UserActivitiesProviderInner>;
 }
 
 export function useUserActivities(): UserActivitiesState {
