@@ -13,8 +13,10 @@
  *   2. Hardcoded mock data (10 activities, all 8 categories) as final fallback
  *
  * Response shape per item:
- *   { id, title, category, date, location, price, slotsLeft, slotsTotal, imageUrl, description }
+ *   { id, title, category, date, availableDates, location, price, slotsLeft, slotsTotal, imageUrl, description }
  *
+ * ACF field "available_dates": Repeater with sub-field "date" (Date Picker, return format Y-m-d).
+ * If the repeater is empty the field is omitted from the response (frontend falls back to free date pick).
  * Categories: flamenco | museum | city_tour | football | cooking_class |
  *             tardeo | language_exchange | day_trip
  */
@@ -116,7 +118,29 @@ function vamos_p2_get_activities( WP_REST_Request $req ) {
                 $image_url = (string) get_the_post_thumbnail_url( $post->ID, 'large' );
             }
 
-            $items[] = [
+            // Collect available dates from ACF Repeater field "available_dates".
+            // Sub-field "date" should use Date Picker with return format Y-m-d.
+            $available_dates = [];
+            $dates_rows = $fields['available_dates'] ?? [];
+            if ( is_array( $dates_rows ) ) {
+                foreach ( $dates_rows as $row ) {
+                    $raw_d = trim( (string) ( $row['date'] ?? '' ) );
+                    if ( ! $raw_d ) continue;
+                    $ts_d = false;
+                    foreach ( [ 'Y-m-d', 'd/m/Y', 'Y-m-d H:i:s' ] as $dfmt ) {
+                        $dt_d = DateTime::createFromFormat( $dfmt, $raw_d );
+                        if ( $dt_d ) { $ts_d = $dt_d->getTimestamp(); break; }
+                    }
+                    if ( $ts_d ) {
+                        $available_dates[] = gmdate( 'Y-m-d', $ts_d );
+                    }
+                }
+                // Remove duplicates and sort chronologically
+                $available_dates = array_values( array_unique( $available_dates ) );
+                sort( $available_dates );
+            }
+
+            $item = [
                 'id'          => $post->ID,
                 'title'       => $post->post_title,
                 'category'    => (string) ( $fields['category'] ?? '' ),
@@ -129,6 +153,10 @@ function vamos_p2_get_activities( WP_REST_Request $req ) {
                 // Use ACF description field first, fall back to post body content
                 'description' => wp_strip_all_tags( $fields['description'] ?? $post->post_content ?? '' ),
             ];
+            if ( ! empty( $available_dates ) ) {
+                $item['availableDates'] = $available_dates;
+            }
+            $items[] = $item;
         }
         return rest_ensure_response( $items );
     }
@@ -145,6 +173,7 @@ function vamos_p2_mock_activities( string $category ): array {
             'location' => 'Cañizares 10, Madrid', 'price' => 38,
             'slotsLeft' => 4, 'slotsTotal' => 20,
             'imageUrl' => '', 'description' => 'An electrifying evening of authentic flamenco in one of Madrid\'s most historic tablaos.',
+            'availableDates' => [ '2026-07-10', '2026-07-17', '2026-07-24', '2026-07-31' ],
         ],
         [
             'id' => 1002, 'title' => 'Tablao Villa Rosa — Flamenco Show',
@@ -166,6 +195,7 @@ function vamos_p2_mock_activities( string $category ): array {
             'location' => 'Calle de Santa Isabel 52, Madrid', 'price' => 20,
             'slotsLeft' => 8, 'slotsTotal' => 20,
             'imageUrl' => '', 'description' => 'Explore Picasso\'s Guernica and modern Spanish masters with a knowledgeable guide.',
+            'availableDates' => [ '2026-06-25', '2026-06-27', '2026-07-02', '2026-07-09', '2026-07-16' ],
         ],
         [
             'id' => 1005, 'title' => 'Madrid Highlights Walking Tour',

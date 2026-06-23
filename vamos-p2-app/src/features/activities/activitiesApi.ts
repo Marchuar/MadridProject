@@ -3,6 +3,7 @@ export interface Activity {
   title: string;
   category: string;
   date: string;
+  availableDates?: string[];
   location: string;
   price: number;
   slotsLeft: number;

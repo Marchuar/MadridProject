@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Modal, Steps, DatePicker, ConfigProvider } from 'antd';
 import { motion, AnimatePresence } from 'motion/react';
 import { CheckCircle, Users, Calendar, ArrowRight, ArrowLeft } from 'lucide-react';
@@ -23,6 +23,13 @@ export function BookingFlow({ activity, open, onClose, onBack }: BookingFlowProp
   const [isConfirming, setIsConfirming] = useState(false);
   const [confirmed, setConfirmed] = useState(false);
   const { addBooking } = useUserActivities();
+
+  useEffect(() => {
+    setStep(0);
+    setSelectedDate(null);
+    setSelectedPeople(1);
+    setConfirmed(false);
+  }, [activity?.id]);
 
   if (!activity) return null;
 
@@ -112,52 +119,95 @@ export function BookingFlow({ activity, open, onClose, onBack }: BookingFlowProp
                 {step === 0 && (
                   <div className={styles.dateStep}>
                     <h3 className={styles.stepTitle}>Choose a date</h3>
-                    <p className={styles.stepSub}>When do you want to go?</p>
+                    <p className={styles.stepSub}>
+                      {activity.availableDates?.length
+                        ? 'Select one of the available dates below'
+                        : 'When do you want to go?'}
+                    </p>
 
-                    {/* Quick date slots — next 7 days */}
-                    <div style={{ display: 'flex', gap: 8, overflowX: 'auto', paddingBottom: 4, marginBottom: 16, scrollbarWidth: 'none' }}>
-                      {Array.from({ length: 7 }, (_, i) => {
-                        const d = dayjs().add(i + 1, 'day');
-                        const isSelected = selectedDate?.isSame(d, 'day');
-                        return (
-                          <motion.button
-                            key={i}
-                            style={{
-                              flexShrink: 0, minWidth: 56, padding: '8px 12px', borderRadius: 12,
-                              border: isSelected ? 'none' : '1.5px solid #EAEAE8',
-                              background: isSelected ? '#E31E24' : 'white',
-                              color: isSelected ? 'white' : '#111827',
-                              cursor: 'pointer', textAlign: 'center', lineHeight: 1.3,
-                            }}
-                            onClick={() => setSelectedDate(d)}
-                            whileTap={{ scale: 0.95 }}
-                          >
-                            <div style={{ fontSize: 10, fontWeight: 600, opacity: 0.7, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-                              {d.format('ddd')}
-                            </div>
-                            <div style={{ fontSize: 20, fontWeight: 900, fontFamily: 'Clash Display, sans-serif' }}>
-                              {d.format('D')}
-                            </div>
-                            <div style={{ fontSize: 10, fontWeight: 600, opacity: 0.7 }}>
-                              {d.format('MMM')}
-                            </div>
-                          </motion.button>
-                        );
-                      })}
-                    </div>
+                    {activity.availableDates?.length ? (
+                      /* Fixed available dates mode */
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 8 }}>
+                        {activity.availableDates.map(dateStr => {
+                          const d = dayjs(dateStr);
+                          const isPast = d.isBefore(dayjs(), 'day');
+                          const isSelected = selectedDate?.isSame(d, 'day');
+                          return (
+                            <motion.button
+                              key={dateStr}
+                              disabled={isPast}
+                              style={{
+                                flexShrink: 0, minWidth: 64, padding: '8px 12px', borderRadius: 12,
+                                border: isSelected ? 'none' : '1.5px solid #EAEAE8',
+                                background: isPast ? '#F3F4F6' : isSelected ? '#E31E24' : 'white',
+                                color: isPast ? '#9CA3AF' : isSelected ? 'white' : '#111827',
+                                cursor: isPast ? 'not-allowed' : 'pointer',
+                                textAlign: 'center', lineHeight: 1.3, opacity: isPast ? 0.5 : 1,
+                              }}
+                              onClick={() => !isPast && setSelectedDate(d)}
+                              whileTap={isPast ? {} : { scale: 0.95 }}
+                            >
+                              <div style={{ fontSize: 10, fontWeight: 600, opacity: 0.7, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                                {d.format('ddd')}
+                              </div>
+                              <div style={{ fontSize: 20, fontWeight: 900, fontFamily: 'Clash Display, sans-serif' }}>
+                                {d.format('D')}
+                              </div>
+                              <div style={{ fontSize: 10, fontWeight: 600, opacity: 0.7 }}>
+                                {d.format('MMM')}
+                              </div>
+                            </motion.button>
+                          );
+                        })}
+                      </div>
+                    ) : (
+                      /* Free date pick mode (no availableDates set) */
+                      <>
+                        <div style={{ display: 'flex', gap: 8, overflowX: 'auto', paddingBottom: 4, marginBottom: 16, scrollbarWidth: 'none' }}>
+                          {Array.from({ length: 7 }, (_, i) => {
+                            const d = dayjs().add(i + 1, 'day');
+                            const isSelected = selectedDate?.isSame(d, 'day');
+                            return (
+                              <motion.button
+                                key={i}
+                                style={{
+                                  flexShrink: 0, minWidth: 56, padding: '8px 12px', borderRadius: 12,
+                                  border: isSelected ? 'none' : '1.5px solid #EAEAE8',
+                                  background: isSelected ? '#E31E24' : 'white',
+                                  color: isSelected ? 'white' : '#111827',
+                                  cursor: 'pointer', textAlign: 'center', lineHeight: 1.3,
+                                }}
+                                onClick={() => setSelectedDate(d)}
+                                whileTap={{ scale: 0.95 }}
+                              >
+                                <div style={{ fontSize: 10, fontWeight: 600, opacity: 0.7, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                                  {d.format('ddd')}
+                                </div>
+                                <div style={{ fontSize: 20, fontWeight: 900, fontFamily: 'Clash Display, sans-serif' }}>
+                                  {d.format('D')}
+                                </div>
+                                <div style={{ fontSize: 10, fontWeight: 600, opacity: 0.7 }}>
+                                  {d.format('MMM')}
+                                </div>
+                              </motion.button>
+                            );
+                          })}
+                        </div>
 
-                    <ConfigProvider theme={{ token: { colorPrimary: '#E31E24' } }}>
-                      <DatePicker
-                        value={selectedDate}
-                        onChange={d => setSelectedDate(d)}
-                        disabledDate={d => d.isBefore(dayjs(), 'day')}
-                        format="D MMMM YYYY"
-                        className={styles.datePicker}
-                        size="large"
-                        placeholder="Or pick a custom date"
-                        allowClear={false}
-                      />
-                    </ConfigProvider>
+                        <ConfigProvider theme={{ token: { colorPrimary: '#E31E24' } }}>
+                          <DatePicker
+                            value={selectedDate}
+                            onChange={d => setSelectedDate(d)}
+                            disabledDate={d => d.isBefore(dayjs(), 'day')}
+                            format="D MMMM YYYY"
+                            className={styles.datePicker}
+                            size="large"
+                            placeholder="Or pick a custom date"
+                            allowClear={false}
+                          />
+                        </ConfigProvider>
+                      </>
+                    )}
                   </div>
                 )}
 
