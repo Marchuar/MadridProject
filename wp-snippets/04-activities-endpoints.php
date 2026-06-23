@@ -15,8 +15,8 @@
  * Response shape per item:
  *   { id, title, category, date, availableDates, location, price, slotsLeft, slotsTotal, imageUrl, description }
  *
- * ACF field "available_dates": Repeater with sub-field "date" (Date Picker, return format Y-m-d).
- * If the repeater is empty the field is omitted from the response (frontend falls back to free date pick).
+ * ACF field "available_dates": Textarea — one date per line in YYYY-MM-DD format (e.g. 2026-07-10).
+ * If the field is empty the key is omitted from the response (frontend falls back to free date pick).
  * Categories: flamenco | museum | city_tour | football | cooking_class |
  *             tardeo | language_exchange | day_trip
  */
@@ -118,16 +118,16 @@ function vamos_p2_get_activities( WP_REST_Request $req ) {
                 $image_url = (string) get_the_post_thumbnail_url( $post->ID, 'large' );
             }
 
-            // Collect available dates from ACF Repeater field "available_dates".
-            // Sub-field "date" should use Date Picker with return format Y-m-d.
+            // Collect available dates from ACF Textarea field "available_dates".
+            // Admin enters one date per line in YYYY-MM-DD format.
             $available_dates = [];
-            $dates_rows = $fields['available_dates'] ?? [];
-            if ( is_array( $dates_rows ) ) {
-                foreach ( $dates_rows as $row ) {
-                    $raw_d = trim( (string) ( $row['date'] ?? '' ) );
+            $dates_raw = trim( (string) ( $fields['available_dates'] ?? '' ) );
+            if ( $dates_raw ) {
+                foreach ( preg_split( '/\r?\n/', $dates_raw ) as $line ) {
+                    $raw_d = trim( $line );
                     if ( ! $raw_d ) continue;
                     $ts_d = false;
-                    foreach ( [ 'Y-m-d', 'd/m/Y', 'Y-m-d H:i:s' ] as $dfmt ) {
+                    foreach ( [ 'Y-m-d', 'd/m/Y', 'd.m.Y' ] as $dfmt ) {
                         $dt_d = DateTime::createFromFormat( $dfmt, $raw_d );
                         if ( $dt_d ) { $ts_d = $dt_d->getTimestamp(); break; }
                     }
